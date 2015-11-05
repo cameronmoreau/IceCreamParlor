@@ -29,7 +29,7 @@ public class MenuState extends AppState {
 		final int minButtonHeight = 45;
 		
 		btnStart = new Button("Start Game");
-		btnHighScore = new Button("High Scores");
+		btnHighScore = new Button("Leaderboard");
 		btnHelp = new Button("Help");
 		
 		btnStart.setMinWidth(minButtonWidth);
