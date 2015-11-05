@@ -2,7 +2,6 @@ package teamoortcloud.scenes;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 public class AppState {
 
