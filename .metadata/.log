@@ -1,0 +1,104 @@
+!SESSION 2015-11-08 01:11:32.192 -----------------------------------------------
+eclipse.buildId=4.5.1.M20150904-0015
+java.version=1.8.0_65
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.epp.logging.aeri.ui 2 5 2015-11-08 01:11:39.691
+!MESSAGE The configuration download failed. Version: 1.0.1.v20150913-0716
+!STACK 0
+org.apache.http.client.HttpResponseException: Service Temporarily Unavailable
+	at org.eclipse.epp.internal.logging.aeri.ui.utils.Responses$ProgressMonitorResponseHandler.handleResponse(Responses.java:49)
+	at org.eclipse.epp.internal.logging.aeri.ui.utils.Responses$ProgressMonitorResponseStringHandler.handleResponse(Responses.java:71)
+	at org.eclipse.epp.internal.logging.aeri.ui.utils.Responses$ProgressMonitorResponseStringHandler.handleResponse(Responses.java:1)
+	at org.apache.http.client.fluent.Response.handleResponse(Response.java:90)
+	at org.eclipse.epp.internal.logging.aeri.ui.utils.Responses.getContentWithProgress(Responses.java:323)
+	at org.eclipse.epp.internal.logging.aeri.ui.v2.AeriServer.refreshConfiguration(AeriServer.java:74)
+	at org.eclipse.epp.internal.logging.aeri.ide.Startup.initializeServerAndConfiguration(Startup.java:211)
+	at org.eclipse.epp.internal.logging.aeri.ide.Startup.access$4(Startup.java:201)
+	at org.eclipse.epp.internal.logging.aeri.ide.Startup$1.run(Startup.java:98)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.epp.logging.aeri.ui 2 29 2015-11-08 01:11:39.702
+!MESSAGE Startup failed, AERI is disabled until next restart. Version: 1.0.1.v20150913-0716
+!STACK 0
+java.lang.RuntimeException: org.apache.http.client.HttpResponseException: Service Temporarily Unavailable
+	at com.google.common.base.Throwables.propagate(Throwables.java:160)
+	at org.eclipse.epp.internal.logging.aeri.ide.Startup.initializeServerAndConfiguration(Startup.java:219)
+	at org.eclipse.epp.internal.logging.aeri.ide.Startup.access$4(Startup.java:201)
+	at org.eclipse.epp.internal.logging.aeri.ide.Startup$1.run(Startup.java:98)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Caused by: org.apache.http.client.HttpResponseException: Service Temporarily Unavailable
+	at org.eclipse.epp.internal.logging.aeri.ui.utils.Responses$ProgressMonitorResponseHandler.handleResponse(Responses.java:49)
+	at org.eclipse.epp.internal.logging.aeri.ui.utils.Responses$ProgressMonitorResponseStringHandler.handleResponse(Responses.java:71)
+	at org.eclipse.epp.internal.logging.aeri.ui.utils.Responses$ProgressMonitorResponseStringHandler.handleResponse(Responses.java:1)
+	at org.apache.http.client.fluent.Response.handleResponse(Response.java:90)
+	at org.eclipse.epp.internal.logging.aeri.ui.utils.Responses.getContentWithProgress(Responses.java:323)
+	at org.eclipse.epp.internal.logging.aeri.ui.v2.AeriServer.refreshConfiguration(AeriServer.java:74)
+	at org.eclipse.epp.internal.logging.aeri.ide.Startup.initializeServerAndConfiguration(Startup.java:211)
+	... 3 more
+
+!ENTRY org.eclipse.egit.ui 2 0 2015-11-08 01:12:28.316
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\adhis'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.egit.ui 4 0 2015-11-08 01:14:42.364
+!MESSAGE Invalid project description.
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Invalid project description.
+	at org.eclipse.core.internal.resources.Project.checkDescription(Project.java:168)
+	at org.eclipse.core.internal.resources.Project.assertCreateRequirements(Project.java:52)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:268)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:252)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createExistingProject(ProjectUtils.java:175)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.access$0(ProjectUtils.java:138)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils$1.run(ProjectUtils.java:97)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2225)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:130)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:60)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.importProjects(GitImportWizard.java:253)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.access$2(GitImportWizard.java:235)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard$4.run(GitImportWizard.java:205)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+Contains: OK
+Contains: C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor overlaps the workspace location: C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2015-11-08 01:14:42.365
+!MESSAGE Invalid project description.
+!SUBENTRY 2 unknown 0 0 2015-11-08 01:14:42.365
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.core.resources 4 77 2015-11-08 01:14:42.365
+!MESSAGE C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor overlaps the workspace location: C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor
+
+!ENTRY org.eclipse.egit.ui 4 0 2015-11-08 01:14:54.540
+!MESSAGE Invalid project description.
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Invalid project description.
+	at org.eclipse.core.internal.resources.Project.checkDescription(Project.java:168)
+	at org.eclipse.core.internal.resources.Project.assertCreateRequirements(Project.java:52)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:268)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:252)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createExistingProject(ProjectUtils.java:175)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.access$0(ProjectUtils.java:138)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils$1.run(ProjectUtils.java:97)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2225)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:130)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:60)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.importProjects(GitImportWizard.java:253)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.access$2(GitImportWizard.java:235)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard$4.run(GitImportWizard.java:205)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+Contains: OK
+Contains: C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor overlaps the workspace location: C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2015-11-08 01:14:54.540
+!MESSAGE Invalid project description.
+!SUBENTRY 2 unknown 0 0 2015-11-08 01:14:54.540
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.core.resources 4 77 2015-11-08 01:14:54.540
+!MESSAGE C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor overlaps the workspace location: C:\Users\adhis\OneDrive\Documents\GitHub\IceCreamParlor
