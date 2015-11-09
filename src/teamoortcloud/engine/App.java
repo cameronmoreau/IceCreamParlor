@@ -18,8 +18,8 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 	
-	public static final int SCREEN_WIDTH = 640;
-	public static final int SCREEN_HEIGHT = 400;
+	public static final int SCREEN_WIDTH = 720;
+	public static final int SCREEN_HEIGHT = 480;
 	
 	StateManager sm;
 	
