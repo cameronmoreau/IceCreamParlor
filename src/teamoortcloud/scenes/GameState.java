@@ -1,7 +1,5 @@
 package teamoortcloud.scenes;
 
-import teamoortcloud.engine.App;
-import teamoortcloud.engine.GameShop;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,6 +11,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import teamoortcloud.engine.App;
+import teamoortcloud.engine.GameShop;
 
 public class GameState extends AppState {
 	

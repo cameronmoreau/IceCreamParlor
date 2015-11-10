@@ -1,4 +1,4 @@
-package teamoortcloud.scenes;
+package teamoortcloud.icecream;
 
 public class IceCreamCone extends IceCream{
 

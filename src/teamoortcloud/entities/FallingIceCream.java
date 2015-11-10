@@ -1,4 +1,4 @@
-package entities;
+package teamoortcloud.entities;
 
 import java.util.Random;
 

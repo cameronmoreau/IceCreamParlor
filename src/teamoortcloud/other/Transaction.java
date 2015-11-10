@@ -1,4 +1,4 @@
-package teamoortcloud.scenes;
+package teamoortcloud.other;
 
 public class Transaction {
 

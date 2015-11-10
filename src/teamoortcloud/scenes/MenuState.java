@@ -13,7 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import teamoortcloud.engine.App;
-import entities.FallingIceCream;
+import teamoortcloud.entities.FallingIceCream;
  
 public class MenuState extends AppState {
 	

@@ -1,4 +1,4 @@
-package teamoortcloud.scenes;
+package teamoortcloud.exceptions;
 
 public class CustomExceptionHandling {
 
