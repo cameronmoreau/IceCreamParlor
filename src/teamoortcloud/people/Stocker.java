@@ -1,7 +1,13 @@
 package teamoortcloud.people;
 
-import teamoortcloud.icecream.IceCream;
+public class Stocker extends Worker {
 
-public class Stocker extends IceCream{
-
+	int stamina;
+	boolean onBreak;
+	
+	public Stocker() {
+		super();
+		this.stamina = 0;
+		this.onBreak = false;
+	}
 }

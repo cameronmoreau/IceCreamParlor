@@ -1,5 +1,8 @@
 package teamoortcloud.scenes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -7,17 +10,36 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import teamoortcloud.engine.App;
 import teamoortcloud.engine.GameShop;
+import teamoortcloud.people.Cashier;
+import teamoortcloud.people.Worker;
 
 public class GameState extends AppState {
 	
+	List<Worker> workers;
+	
 	public GameState(StateManager sm) {
 		super(sm);
+		
+		workers = new ArrayList<>();
+		workers.add(new Worker(1, "Cookie Monster"));
+		workers.add(new Worker(2, "Jonna Hill"));
+		workers.add(new Worker(15, "Swag daddy princeess"));
+		
+		for(Worker w : workers) {
+			System.out.println(w.toString());
+		}
+		
 		
 		//Setup basic panes + contents
 		VBox rootPane = new VBox();
@@ -48,6 +70,8 @@ public class GameState extends AppState {
 		btnStocker = new Button("Stocker");
 		btnManager = new Button("Employees");
 		btnShop = new Button("Shop Settings");
+		
+		btnManager.setOnAction(e -> employeesWindow());
 		
 		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
 		
@@ -93,6 +117,29 @@ public class GameState extends AppState {
 		);
 		
 		return pane;
+	}
+	
+	private void employeesWindow() {
+		VBox pane = new VBox();
+		
+		Stage stage = new Stage();
+		stage.initModality(Modality.WINDOW_MODAL);
+		stage.initOwner(this.scene.getWindow());
+		stage.setTitle("Employees");
+		
+		
+		TableView employeeTable = new TableView();
+		employeeTable.getColumns().addAll(
+			new TableColumn("Name"),
+			new TableColumn("Type"),
+			new TableColumn("On Break"),
+			new TableColumn("Edit")
+		);
+		
+		pane.getChildren().add(employeeTable);
+		
+		stage.setScene(new Scene(pane, 300, 300));
+		stage.show();
 	}
 
 }

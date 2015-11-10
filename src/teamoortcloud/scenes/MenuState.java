@@ -69,8 +69,8 @@ public class MenuState extends AppState {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
 		//Load images
-		Image iceCreamImage = new Image("file:res/icecream_cone_happy.png");
-		Image bg = new Image("file:res/menu_bg.jpg");
+		Image iceCreamImage = new Image("file:res/images/icecream_cone_happy.png");
+		Image bg = new Image("file:res/images/menu_bg.jpg");
 		
 		//Generate falling ice cream
 		Random rand = new Random();
