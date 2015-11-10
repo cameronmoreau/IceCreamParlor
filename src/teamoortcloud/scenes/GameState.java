@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class GameState extends AppState {
@@ -18,39 +19,56 @@ public class GameState extends AppState {
 	public GameState(StateManager sm) {
 		super(sm);
 		
-		//Setup basic panes
-		BorderPane rootPane = new BorderPane();
-		
-		//Setup pane contents
-		rootPane.setTop(initTopBar());
-		rootPane.setCenter(initCenterGame());
-		rootPane.setBottom(initBottomStats());
+		//Setup basic panes + contents
+		VBox rootPane = new VBox();
+		rootPane.getChildren().addAll(initToolBar(), initGame());
 		
 		scene = new Scene(rootPane);
 	}
 	
-	private HBox initTopBar() {
-		HBox pane = new HBox();
-		//pane.setMaxHeight(30);
-		pane.setSpacing(15);
-		pane.setPadding(new Insets(10));
-		pane.setStyle("-fx-background-color: orange;");
+	private BorderPane initToolBar() {
+		BorderPane pane = new BorderPane();
+		HBox leftPane = new HBox();
+		HBox rightPane = new HBox();
 		
+		final int PANE_SPACING = 15;
+		final int PANE_PADDING = 10;
+		
+		leftPane.setSpacing(PANE_SPACING);
+		leftPane.setPadding(new Insets(PANE_PADDING));
+		leftPane.setStyle("-fx-background-color: orange;");
+		
+		rightPane.setSpacing(PANE_SPACING);
+		rightPane.setPadding(new Insets(PANE_PADDING));
+		rightPane.setStyle("-fx-background-color: red;");
+		
+		//Left ToolBar
 		Button btnCashier, btnStocker, btnManager, btnShop;
 		btnCashier = new Button("Cashier");
 		btnStocker = new Button("Stocker");
 		btnManager = new Button("Employees");
 		btnShop = new Button("Shop Settings");
 		
-		pane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
+		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
+		
+		//right ToolBar
+		Button btnStats = new Button("stats");
+		rightPane.getChildren().addAll(btnStats);
+		
+		
+		pane.setLeft(leftPane);
+		pane.setRight(rightPane);
+		
+		System.out.println(leftPane.getHeight());
 		
 		return pane;
 	}
 	
-	private Group initCenterGame() {
+	private Group initGame() {
 		Group pane = new Group();
 		
-		Canvas canvas = new Canvas(App.SCREEN_WIDTH, App.SCREEN_HEIGHT - 100);
+		//FIX TO ACTUAL SIZE
+		Canvas canvas = new Canvas(App.SCREEN_WIDTH, App.SCREEN_HEIGHT - 80);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
 		GameShop game = new GameShop();

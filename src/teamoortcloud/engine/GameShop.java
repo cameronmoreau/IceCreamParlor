@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 public class GameShop {
 	
 	public static final int TILE_WIDTH = 45;
-	public static final int TILE_HEIGHT = 20;
+	public static final int TILE_HEIGHT = 25;
 	public static final int TILE_SIZE = 16;
 	
 	int tiles[][];
