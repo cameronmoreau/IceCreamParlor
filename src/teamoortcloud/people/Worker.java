@@ -18,6 +18,16 @@ public class Worker {
 		this.id = id;
 		this.name = name;
 	}
+	
+	public Worker(long id, String name, long customersServed,
+			long scoopsServed, double moneyTaken) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.customersServed = customersServed;
+		this.scoopsServed = scoopsServed;
+		this.moneyTaken = moneyTaken;
+	}
 
 	public long getId() {
 		return id;

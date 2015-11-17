@@ -1,9 +1,7 @@
 package teamoortcloud.scenes;
 
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -19,19 +17,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import teamoortcloud.engine.App;
+import teamoortcloud.engine.DataLoader;
 import teamoortcloud.engine.GameShop;
-import teamoortcloud.people.Cashier;
 import teamoortcloud.people.Worker;
 
 public class GameState extends AppState {
 	
-	List<Worker> workers;
+	ArrayList<Worker> workers;
 	GameShop game;
 	
 	public GameState(StateManager sm) {
@@ -39,14 +36,11 @@ public class GameState extends AppState {
 		
 		game = new GameShop();
 		
-		workers = new ArrayList<>();
-		workers.add(new Worker(1, "Cookie Monster"));
-		workers.add(new Worker(2, "Jonna Hill"));
-		workers.add(new Worker(15, "Swag daddy princeess"));
-		
-		for(Worker w : workers) {
-			System.out.println(w.toString());
-		}
+		workers = DataLoader.getWorkers();
+		System.out.println(workers.toString());
+//		workers.add(new Worker(1, "Cookie Monster"));
+//		workers.add(new Worker(2, "Jonna Hill"));
+//		workers.add(new Worker(15, "Swag daddy princeess"));
 		
 		
 		//Setup basic panes + contents
@@ -92,8 +86,6 @@ public class GameState extends AppState {
 		
 		pane.setLeft(leftPane);
 		pane.setRight(rightPane);
-		
-		System.out.println(leftPane.getHeight());
 		
 		return pane;
 	}

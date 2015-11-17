@@ -1,0 +1,16 @@
+1,1.00,Vanilla,Vanilla,Plain Vanilla Flavor,80
+2,1.00,French Vanilla,Strong Vanilla, 125% Vanilla Custard,80
+3,1.00,Chocolate,Chocolate,Standard Chocolate Flavor,80
+4,1.00,Strawberry,Strawberry,Standard Strawberry Flavor,80
+5,1.00,Orange Sherbet,Orange,Cold Citrus Flavor,80
+6,1.00,Peppermint,Peppermint,Minty Flavor with small bits of candy cane,80
+7,1.00,Butter Pecan,Pecan,Buttercream with real chopped pecans,80
+8,1.00,Cookies & Cream,Delicious,Cream flavor with broken bits of cookie,0
+9,1.00,Chocolate Chunk,Cream,Cream flavor with broken bits of dark chocolate,80
+10,1.15,Zombie Brain,Lime,From the terror of your nightmares try ZOMBIE BRAIN, 40
+11,1.15,Pluto Crunch,Blueberry,From the depths of outer space comes PLUTO CRUNCH! with almonds, 40
+12,1.15,Anteater Surprise,Vanilla,Your ice cream cone will be covered with chocolate ants!, 40
+13,1.15,Habanero Hotspot,Disgusting,Red Raspberry with bits of cinnamon candy, 40
+14,1.15,Peanut Butter Ripple,Peanut Butter,Cream with Peanut Butter Syrup swirled Within the Vortex!, 40
+15,1.15,Dream Cooler,Orange,Cream with Orange Syrup Swirled within the Dream!, 40
+16,1.15,Lemon Sherbet,Lemon,Standard Lemon Flavor, 40
