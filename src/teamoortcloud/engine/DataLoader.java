@@ -3,8 +3,10 @@ package teamoortcloud.engine;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
+import teamoortcloud.icecream.IceCream;
 
 import teamoortcloud.people.Cashier;
+import teamoortcloud.people.Customer;
 import teamoortcloud.people.Stocker;
 import teamoortcloud.people.Worker;
 
@@ -61,10 +63,68 @@ public class DataLoader {
 		return workers;
 	}
 	
+        public static ArrayList<Customer> getCustomers() {
+            ArrayList<Customer> customer = new ArrayList<>();
+            try {
+			Scanner fileReader = new Scanner(new FileReader(getFileName(CUSTOMER)));
+			String line;
+			
+			while(fileReader.hasNextLine()) {
+				line = fileReader.nextLine();
+				String[] fields = line.split(",");
+                                long id = Long.parseLong(fields[0].trim());
+				String name = fields[1].trim();
+				double wallet= Double.parseDouble(fields[2].trim());
+				int happiness = Integer.parseInt(fields[3].trim());
+				int pennies= Integer.parseInt(fields[4].trim());
+                                int nickles= Integer.parseInt(fields[5].trim());
+                                int dimes= Integer.parseInt(fields[6].trim());
+                                int quarters= Integer.parseInt(fields[7].trim());
+                                int dollar1= Integer.parseInt(fields[8].trim());
+                                int dollar5= Integer.parseInt(fields[9].trim());
+                                int dollar10= Integer.parseInt(fields[10].trim());
+                                int dollar20= Integer.parseInt(fields[11].trim());
+                                
+                                customer.add(new Customer(id, name, wallet, happiness, pennies, nickles, 
+                                        dimes, quarters, dollar1, dollar5, dollar10, dollar20));
+                        }        
+            }                    
+            catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return customer;
+	}                    
+                                
+        public static ArrayList<IceCream> getIceCream() {
+            ArrayList<IceCream> icecream = new ArrayList<>();
+            try {
+			Scanner fileReader = new Scanner(new FileReader(getFileName(ICECREAM)));
+			String line;
+			
+			while(fileReader.hasNextLine()) {
+				line = fileReader.nextLine();
+				String[] fields = line.split(",");
+                                long id = Long.parseLong(fields[0].trim());
+                                double price= Double.parseDouble(fields[1].trim());
+				String flavor = fields[2].trim();
+				String name = fields[3].trim();
+				String description= fields[4].trim();
+                                int scoops= Integer.parseInt(fields[5].trim());
+                                icecream.add(new IceCream(id, price, flavor, name, description, scoops));
+                        }        
+            }                    
+            catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return icecream;
+	}
+        
 	private static String getFileName(int type) {
 		switch(type) {
 		case WORKER:
-			return "data/TestWorkers.txt";
+			return "data/TestWorker.txt";
 		case CUSTOMER:
 			return "data/TestCustomer.txt";
 		case ICECREAM:
