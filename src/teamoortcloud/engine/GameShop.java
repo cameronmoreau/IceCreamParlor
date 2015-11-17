@@ -3,16 +3,22 @@ package teamoortcloud.engine;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import teamoortcloud.entities.CustomerCharacter;
+import teamoortcloud.entities.CustomerManager;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class GameShop {
 	
 	public static final int TILE_WIDTH = 45;
-	public static final int TILE_HEIGHT = 25;
+	public static final int TILE_HEIGHT = 18;
 	public static final int TILE_SIZE = 16;
 	
 	int tiles[][];
+	
+	CustomerManager customerManager;
+	Image bg;
 	
 	public GameShop() {
 		tiles = new int[TILE_HEIGHT][TILE_WIDTH];
@@ -21,6 +27,11 @@ public class GameShop {
 		tiles[3][5] = 2;
 		tiles[3][6] = 2;
 		tiles[3][7] = 2;
+		
+		customerManager = new CustomerManager();
+		bg = new Image("file:res/images/bg_shop.png");
+		
+		//customer.travelTo(150, 300);
 		
 //		try {
 //			Scanner fileReader = new Scanner(new FileReader("res/maps/map_detail.txt"));
@@ -36,9 +47,23 @@ public class GameShop {
 //			
 //		}
 	}
-
+	
+	public void update() {
+		customerManager.update();
+	}
+	
+	public void addCustomer() {
+		customerManager.queueNewCustomer();
+	}
+	
+	public void removeCustomer() {
+		customerManager.dequeueCustomer();
+	}
 	
 	public void draw(GraphicsContext gc) {
+		gc.drawImage(bg, 0, 0, TILE_WIDTH * TILE_SIZE, TILE_HEIGHT * TILE_SIZE);
+		customerManager.draw(gc);
+		
 		for(int y = 0; y < TILE_HEIGHT; y++) {
 			for(int x = 0; x < TILE_WIDTH; x++) {
 				Color c = Color.BLACK;
@@ -62,8 +87,8 @@ public class GameShop {
 					break;
 				}
 				
-				gc.setFill(c);
-				gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+				//gc.setFill(c);
+				//gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 			}
 		}
 	}

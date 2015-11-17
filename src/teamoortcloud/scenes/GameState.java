@@ -1,8 +1,12 @@
 package teamoortcloud.scenes;
 
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.animation.AnimationTimer;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -12,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -27,9 +32,12 @@ import teamoortcloud.people.Worker;
 public class GameState extends AppState {
 	
 	List<Worker> workers;
+	GameShop game;
 	
 	public GameState(StateManager sm) {
 		super(sm);
+		
+		game = new GameShop();
 		
 		workers = new ArrayList<>();
 		workers.add(new Worker(1, "Cookie Monster"));
@@ -72,6 +80,8 @@ public class GameState extends AppState {
 		btnShop = new Button("Shop Settings");
 		
 		btnManager.setOnAction(e -> employeesWindow());
+		btnCashier.setOnAction(e -> game.addCustomer());
+		btnStocker.setOnAction(e -> game.removeCustomer());
 		
 		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
 		
@@ -95,16 +105,48 @@ public class GameState extends AppState {
 		Canvas canvas = new Canvas(App.SCREEN_WIDTH, App.SCREEN_HEIGHT - 80);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
-		GameShop game = new GameShop();
+		Point mouseLoc = new Point(0, 0);
 		
-		gc.setFill(Color.BLACK);
-		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent e) {
+				mouseLoc.setLocation(e.getX(), e.getY());
+			}
+			
+		});
 		
-		game.draw(gc);
+		//gc.setFill(Color.BLACK);
+		//gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		
+		//game.draw(gc);
+		
+		new AnimationTimer() {
+
+			@Override
+			public void handle(long now) {
+				game.update();
+				game.draw(gc);
+				
+				drawDebug(gc, mouseLoc);
+				
+			}
+			
+		}.start();
 		
 		pane.getChildren().add(canvas);
 		
 		return pane;
+	}
+	
+	private void drawDebug(GraphicsContext gc, Point mouse) {
+		
+		gc.setFill(Color.WHITE);
+		gc.fillText(String.format(
+				"\nMX: %d MY: %d \nTileX: %d TileY: %d", 
+				(int)mouse.getX(), (int)mouse.getY(),
+				(int)mouse.getX() / 16, (int)mouse.getY() / 16
+		), 0, 0);
 	}
 	
 	private HBox initBottomStats() {
