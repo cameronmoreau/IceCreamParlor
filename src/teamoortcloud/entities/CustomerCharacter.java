@@ -5,15 +5,20 @@ import javafx.scene.image.Image;
 
 public class CustomerCharacter {
 	
+	public static final int STATE_LINE = 0;
+	public static final int STATE_SITTING = 1;
+	
 	int x, y;
 	float vel = 2.5f;
 	
 	Image image;
 	boolean traveling = false;
 	int travelX, travelY;
+	int state;
 	
 	public CustomerCharacter(int x, int y) {
-		image = new Image("file:res/images/character.png");
+		this.image = new Image("file:res/images/character.png");
+		this.state = STATE_LINE;
 		this.x = x;
 		this.y = y;
 	}
@@ -48,5 +53,15 @@ public class CustomerCharacter {
 	public void stopTraveling() {
 		traveling = false;
 	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+	
+	
 
 }
