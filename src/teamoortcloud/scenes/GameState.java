@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -11,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -71,7 +74,8 @@ public class GameState extends AppState {
 		btnShop = new Button("Shop Settings");
 		
 		btnManager.setOnAction(e -> employeesWindow());
-		btnCashier.setOnAction(e -> game.addCustomer());
+		btnShop.setOnAction(e -> game.addCustomer());
+		btnCashier.setOnAction(e -> checkoutWindow());
 		btnStocker.setOnAction(e -> game.removeCustomer());
 		
 		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
@@ -148,6 +152,65 @@ public class GameState extends AppState {
 		);
 		
 		return pane;
+	}
+	
+	private void checkoutWindow() {
+		
+		//Stage
+		Stage stage = new Stage();
+		stage.initModality(Modality.WINDOW_MODAL);
+		stage.initOwner(this.scene.getWindow());
+		stage.setTitle("Cash Register");
+		//stage.setWidth(App.SCREEN_WIDTH);
+		
+		//Panes
+		BorderPane basePane = new BorderPane();
+		VBox leftPane = new VBox();
+		VBox rightPane = new VBox();
+		
+		basePane.setPadding(new Insets(15));
+		
+		Label labelCustomer = new Label("Current Customer: <Customer>");
+		
+		TableView<String> itemsTable = new TableView<>();
+		itemsTable.getColumns().addAll(
+			new TableColumn<String, String>("Item"),
+			new TableColumn<String, String>("Details"),
+			new TableColumn<String, String>("Price")
+		);
+		
+		//Bottom buttons
+		Button btnAddItem = new Button("Add Item");
+		Button btnCheckoutCredit = new Button("Checkout with Credit");
+		Button btnCheckoutCash = new Button("Checkout with Cash  ");
+		
+		BorderPane borderPane = new BorderPane();
+		borderPane.setLeft(btnAddItem);
+		borderPane.setRight(new VBox(btnCheckoutCredit, btnCheckoutCash));
+		
+		leftPane.getChildren().addAll(labelCustomer, itemsTable, borderPane);
+		
+		
+		String orderTypes[] = {"Cone", "Sundae", "Split", "Float", "Soda"};
+		ObservableList<String> orderTypesList = FXCollections.observableArrayList(orderTypes);
+		
+		//Right side
+		//VBox formPane = new VBox();
+		
+		ComboBox comboOrderType = new ComboBox(orderTypesList);
+		rightPane.getChildren().addAll(comboOrderType);
+		
+		//cone[cake, sugar, waffle] Flavors: 3
+		//sundae, flavors: 1, nuts, extraFlavor
+		//Split, flavors: 1, nuts, 3 extra flavors
+		//float, nothing
+		//Soda, flavors: 1
+		
+		basePane.setLeft(leftPane);
+		basePane.setRight(rightPane);
+		
+		stage.setScene(new Scene(basePane, 450, 300));
+		stage.show();
 	}
 	
 	private void employeesWindow() {

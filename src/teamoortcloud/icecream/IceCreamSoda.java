@@ -1,5 +1,5 @@
 package teamoortcloud.icecream;
 
-public class IceCream {
-	
+public class IceCreamSoda {
+
 }
