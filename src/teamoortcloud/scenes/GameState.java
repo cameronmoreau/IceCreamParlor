@@ -27,11 +27,15 @@ import javafx.stage.Stage;
 import teamoortcloud.engine.App;
 import teamoortcloud.engine.DataLoader;
 import teamoortcloud.engine.GameShop;
+import teamoortcloud.icecream.IceCream;
+import teamoortcloud.people.Customer;
 import teamoortcloud.people.Worker;
 
 public class GameState extends AppState {
 	
 	ArrayList<Worker> workers;
+        ArrayList<Customer> customers;
+        ArrayList<IceCream> icecream;
 	GameShop game;
 	
 	public GameState(StateManager sm) {
@@ -40,7 +44,15 @@ public class GameState extends AppState {
 		game = new GameShop();
 		
 		workers = DataLoader.getWorkers();
+                customers = DataLoader.getCustomers();
+                icecream = DataLoader.getIceCream();
 		System.out.println(workers.toString());
+                System.out.println(customers.toString());
+                System.out.println(icecream.toString());
+//		workers.add(new Worker(1, "Cookie Monster"));
+//		workers.add(new Worker(2, "Jonna Hill"));
+//		workers.add(new Worker(15, "Swag daddy princeess"));
+
 		
 		
 		//Setup basic panes + contents

@@ -22,7 +22,7 @@ public class Stocker extends Worker {
 		return "Stocker [stamina=" + stamina + ", onBreak=" + onBreak + ", id="
 				+ id + ", name=" + name + ", customersServed="
 				+ customersServed + ", scoopsServed=" + scoopsServed
-				+ ", moneyTaken=" + moneyTaken + "]";
+				+ ", moneyTaken=" + moneyTaken + "]\n";
 	}
 	
 }

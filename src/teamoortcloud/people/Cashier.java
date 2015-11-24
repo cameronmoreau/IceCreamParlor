@@ -22,7 +22,7 @@ public class Cashier extends Worker {
 		return "Cashier [patience=" + patience + ", onBreak=" + onBreak
 				+ ", id=" + id + ", name=" + name + ", customersServed="
 				+ customersServed + ", scoopsServed=" + scoopsServed
-				+ ", moneyTaken=" + moneyTaken + "]";
+				+ ", moneyTaken=" + moneyTaken + "]\n";
 	}
 	
 }

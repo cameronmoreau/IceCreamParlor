@@ -73,7 +73,7 @@ public class Worker {
 	public String toString() {
 		return "Worker [id=" + id + ", name=" + name + ", customersServed="
 				+ customersServed + ", scoopsServed=" + scoopsServed
-				+ ", moneyTaken=" + moneyTaken + "]";
+				+ ", moneyTaken=" + moneyTaken + "]\n";
 	}
 	
 	
