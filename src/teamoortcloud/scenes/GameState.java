@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -34,27 +36,25 @@ import teamoortcloud.people.Worker;
 public class GameState extends AppState {
 	
 	ArrayList<Worker> workers;
-        ArrayList<Customer> customers;
-        ArrayList<IceCream> icecream;
+    ArrayList<Customer> customers;
+    ArrayList<IceCream> icecream;
+    
 	GameShop game;
+	
+	StateManager subManager;
 	
 	public GameState(StateManager sm) {
 		super(sm);
 		
+		//subManager = new StateManager();
+		
 		game = new GameShop();
 		
 		workers = DataLoader.getWorkers();
-                customers = DataLoader.getCustomers();
-                icecream = DataLoader.getIceCream();
-		System.out.println(workers.toString());
-                System.out.println(customers.toString());
-                System.out.println(icecream.toString());
-//		workers.add(new Worker(1, "Cookie Monster"));
-//		workers.add(new Worker(2, "Jonna Hill"));
-//		workers.add(new Worker(15, "Swag daddy princeess"));
+        customers = DataLoader.getCustomers();
+        icecream = DataLoader.getIceCream();
 
-		
-		
+        
 		//Setup basic panes + contents
 		VBox rootPane = new VBox();
 		rootPane.getChildren().addAll(initToolBar(), initGame());
@@ -175,53 +175,11 @@ public class GameState extends AppState {
 		stage.setTitle("Cash Register");
 		//stage.setWidth(App.SCREEN_WIDTH);
 		
-		//Panes
-		BorderPane basePane = new BorderPane();
-		VBox leftPane = new VBox();
-		VBox rightPane = new VBox();
-		
-		basePane.setPadding(new Insets(15));
-		
-		Label labelCustomer = new Label("Current Customer: <Customer>");
-		
-		TableView<String> itemsTable = new TableView<>();
-		itemsTable.getColumns().addAll(
-			new TableColumn<String, String>("Item"),
-			new TableColumn<String, String>("Details"),
-			new TableColumn<String, String>("Price")
-		);
-		
-		//Bottom buttons
-		Button btnAddItem = new Button("Add Item");
-		Button btnCheckoutCredit = new Button("Checkout with Credit");
-		Button btnCheckoutCash = new Button("Checkout with Cash  ");
-		
-		BorderPane borderPane = new BorderPane();
-		borderPane.setLeft(btnAddItem);
-		borderPane.setRight(new VBox(btnCheckoutCredit, btnCheckoutCash));
-		
-		leftPane.getChildren().addAll(labelCustomer, itemsTable, borderPane);
 		
 		
-		String orderTypes[] = {"Cone", "Sundae", "Split", "Float", "Soda"};
-		ObservableList<String> orderTypesList = FXCollections.observableArrayList(orderTypes);
-		
-		//Right side
-		//VBox formPane = new VBox();
-		
-		ComboBox comboOrderType = new ComboBox(orderTypesList);
-		rightPane.getChildren().addAll(comboOrderType);
-		
-		//cone[cake, sugar, waffle] Flavors: 3
-		//sundae, flavors: 1, nuts, extraFlavor
-		//Split, flavors: 1, nuts, 3 extra flavors
-		//float, nothing
-		//Soda, flavors: 1
-		
-		basePane.setLeft(leftPane);
-		basePane.setRight(rightPane);
-		
-		stage.setScene(new Scene(basePane, 450, 300));
+		//stage.setScene(new Scene(basePane, 450, 300));
+		AppState state = new CheckoutState(null, workers, customers, icecream);
+		stage.setScene(state.scene);
 		stage.show();
 	}
 	

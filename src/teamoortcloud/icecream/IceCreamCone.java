@@ -1,9 +1,10 @@
 package teamoortcloud.icecream;
 
-public class IceCreamCone extends IceCream{
+public class IceCreamCone extends Serving {
 
-    public IceCreamCone(long id, String flavor, double price, String name, String description, int scoops) {
-        super(id, price, flavor, name, description, scoops);
-    }
-
+	@Override
+	public int getMaxScoops() {
+		return 3;
+	}
+	
 }
