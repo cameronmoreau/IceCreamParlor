@@ -142,14 +142,14 @@ public class CheckoutState extends AppState {
 		
 		//Extras
 		rightPane.getChildren().add(new Label("Icecream Extras:"));
-		comboExtras = new ComboBox[MAX_EXTRAS];
-		
-		for(int i = 0; i < MAX_EXTRAS; i++) {
-			comboExtras[i] = new ComboBox<String>(flavorTypesList);
-			comboExtras[i].setDisable(true);
-			
-			rightPane.getChildren().add(comboFlavors[i]);
-		}
+//		comboExtras = new ComboBox[MAX_EXTRAS];
+//		
+//		for(int i = 0; i < MAX_EXTRAS; i++) {
+//			comboExtras[i] = new ComboBox<String>(flavorTypesList);
+//			comboExtras[i].setDisable(true);
+//			
+//			rightPane.getChildren().add(comboFlavors[i]);
+//		}
 
 		return rightPane;
 	}
