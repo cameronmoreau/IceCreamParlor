@@ -14,6 +14,11 @@ public class IceCreamSundae extends Serving {
 		if(hasNuts) price++;
 		return price;
 	}
+	
+	@Override
+	public String getName() {
+		return "Sundae";
+	}
 
 	@Override
 	public int getMaxScoops() {

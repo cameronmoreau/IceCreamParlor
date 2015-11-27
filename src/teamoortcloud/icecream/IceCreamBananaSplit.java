@@ -13,6 +13,11 @@ public class IceCreamBananaSplit extends IceCreamSundae {
 	}
 
 	@Override
+	public String getName() {
+		return "Banana Split";
+	}
+
+	@Override
 	public int getMaxScoops() {
 		return 3;
 	}

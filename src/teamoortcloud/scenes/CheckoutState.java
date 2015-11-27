@@ -13,6 +13,7 @@ import teamoortcloud.icecream.IceCreamRootBeerFloat;
 import teamoortcloud.icecream.IceCreamSoda;
 import teamoortcloud.icecream.IceCreamSundae;
 import teamoortcloud.icecream.Serving;
+import teamoortcloud.other.Order;
 import teamoortcloud.people.Customer;
 import teamoortcloud.people.Worker;
 import javafx.beans.value.ChangeListener;
@@ -24,6 +25,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
@@ -33,13 +35,17 @@ public class CheckoutState extends AppState {
 	
 	static final int MAX_FLAVORS = 3;
 	static final int MAX_EXTRAS = 3;
+	
 	Serving tempServing;
+	Order order;
 	
 	NumberFormat moneyFormat;
 	
 	ArrayList<Worker> workers;
 	ArrayList<Customer> customers;
 	ArrayList<IceCream> icecream;
+	
+	ListView<String> orderList;
 	
 	ComboBox<String> comboFlavors[];
 	ComboBox<String> comboExtras[];
@@ -57,6 +63,7 @@ public class CheckoutState extends AppState {
 		this.customers = customers;
 		this.icecream = icecream;
 		
+		order = new Order();
 		moneyFormat = NumberFormat.getCurrencyInstance();
 		
 		//Panes
@@ -71,26 +78,25 @@ public class CheckoutState extends AppState {
 	
 	private VBox setupLeftPane() {
 		VBox leftPane = new VBox();
+		leftPane.setSpacing(5);
+		leftPane.setPadding(new Insets(0, 5, 5, 5));
 		
 		Label labelCustomer = new Label("Current Customer: <Customer>");
 		
-		TableView<String> itemsTable = new TableView<>();
-		itemsTable.getColumns().addAll(
-			new TableColumn<String, String>("Item"),
-			new TableColumn<String, String>("Details"),
-			new TableColumn<String, String>("Price")
-		);
+		orderList = new ListView<String>();
 		
 		//Bottom buttons
-		Button btnAddItem = new Button("Add Item");
+		Button btnRemoveItem = new Button("Remove Item");
 		Button btnCheckoutCredit = new Button("Checkout with Credit");
 		Button btnCheckoutCash = new Button("Checkout with Cash  ");
 		
+		btnRemoveItem.setOnAction(e -> removeFromOrder());
+		
 		BorderPane borderPane = new BorderPane();
-		borderPane.setLeft(btnAddItem);
+		borderPane.setLeft(btnRemoveItem);
 		borderPane.setRight(new VBox(btnCheckoutCredit, btnCheckoutCash));
 		
-		leftPane.getChildren().addAll(labelCustomer, itemsTable, borderPane);
+		leftPane.getChildren().addAll(labelCustomer, orderList, borderPane);
 		
 		return leftPane;
 	}
@@ -156,10 +162,13 @@ public class CheckoutState extends AppState {
 				public void changed(ObservableValue<? extends String> list,
 						String previousValue, String value) {
 					
-					tempServing.addIceCreamAtPos(
-						index, 
-						icecream.get(comboFlavors[index].getSelectionModel().getSelectedIndex())
-					);
+					int selectedIndex = comboFlavors[index].getSelectionModel().getSelectedIndex();
+					if(selectedIndex != -1) {			
+						tempServing.addIceCreamAtPos(
+							index, 
+							icecream.get(selectedIndex)
+						);
+					}
 					
 					updateFields();
 				}
@@ -185,11 +194,10 @@ public class CheckoutState extends AppState {
 						String previousValue, String value) {
 					
 					//Select extra and add to ice cream
-					tempServing.addExtraAtPos(
-						index, 
-						comboExtras[index].getSelectionModel().getSelectedIndex()
-					);
-					
+					int selectedIndex = comboFlavors[index].getSelectionModel().getSelectedIndex();
+					if(selectedIndex != -1) {			
+						tempServing.addExtraAtPos(index, selectedIndex);
+					}
 					updateFields();
 				}
 				
@@ -201,7 +209,7 @@ public class CheckoutState extends AppState {
 		//Add and estimate price
 		btnAddToOrder = new Button("Add to order");
 		btnAddToOrder.setDisable(true);
-		btnAddToOrder.setOnAction(e -> System.out.println(tempServing.getPrice()));
+		btnAddToOrder.setOnAction(e -> addToOrder());
 		
 		rightPane.getChildren().addAll(btnAddToOrder);
 
@@ -236,12 +244,37 @@ public class CheckoutState extends AppState {
 	}
 	
 	//Helper functions
-	private void checkOtherFields() {
+	private void updateOrderList() {
+		orderList.setItems(getServingsListData());
+	}
+	
+	private ObservableList<String> getServingsListData() {
+		ObservableList<String> array = FXCollections.observableArrayList();
+		for(Serving s : order.getServings()) array.add(s.getName() + ": " + moneyFormat.format(s.getPrice()));
+		return array;
+	}
+	
+	private void addToOrder() {
+		order.addServing(tempServing);
+		tempServing = null;
+		clearFields();
 		
+		//Add to list
+		updateOrderList();
+	}
+	
+	private void removeFromOrder() {
+		int index = orderList.getSelectionModel().getSelectedIndex();
+		if(orderList.getSelectionModel().getSelectedIndex() != -1) {
+			orderList.getItems().remove(index);
+			order.removeServing(index);
+		}
+	}
+	
+	private void checkOtherFields() {
 		//Check for cone
 		if(tempServing.getClass() == IceCreamCone.class) comboCone.setDisable(false);
 		else comboCone.setDisable(true);
-		
 	}
 	
 	private void clearFields() {
@@ -262,6 +295,8 @@ public class CheckoutState extends AppState {
 	}
 	
 	private boolean formIsValid() {
+		if(tempServing == null) return false;
+		
 		for(int i = 0; i < tempServing.getMaxScoops(); i++) {
 			if(comboFlavors[i].getSelectionModel().getSelectedIndex() == -1) return false;
 		}

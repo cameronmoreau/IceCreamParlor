@@ -7,6 +7,11 @@ public class IceCreamSoda extends Serving {
 	}
 	
 	@Override
+	public String getName() {
+		return "Ice Cream Soda";
+	}
+	
+	@Override
 	public int getMaxScoops() {
 		return 2;
 	}	

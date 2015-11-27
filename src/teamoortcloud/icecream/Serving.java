@@ -44,6 +44,10 @@ public class Serving {
 		extras[pos] = extra;
 	}
 	
+	public String getName() {
+		return "Basic Serving";
+	}
+	
 	public int getMaxScoops() { 
 		return 1; 
 	}
