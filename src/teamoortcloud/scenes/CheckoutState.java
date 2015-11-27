@@ -1,10 +1,14 @@
 package teamoortcloud.scenes;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+
+import javax.swing.text.NumberFormatter;
 
 import teamoortcloud.icecream.IceCream;
 import teamoortcloud.icecream.IceCreamBananaSplit;
 import teamoortcloud.icecream.IceCreamCone;
+import teamoortcloud.icecream.IceCreamExtra;
 import teamoortcloud.icecream.IceCreamRootBeerFloat;
 import teamoortcloud.icecream.IceCreamSoda;
 import teamoortcloud.icecream.IceCreamSundae;
@@ -31,6 +35,8 @@ public class CheckoutState extends AppState {
 	static final int MAX_EXTRAS = 3;
 	Serving tempServing;
 	
+	NumberFormat moneyFormat;
+	
 	ArrayList<Worker> workers;
 	ArrayList<Customer> customers;
 	ArrayList<IceCream> icecream;
@@ -38,6 +44,8 @@ public class CheckoutState extends AppState {
 	ComboBox<String> comboFlavors[];
 	ComboBox<String> comboExtras[];
 	ComboBox<String> comboCone;
+	
+	Button btnAddToOrder;
 
 	public CheckoutState(StateManager sm) {
 		super(sm);
@@ -49,21 +57,15 @@ public class CheckoutState extends AppState {
 		this.customers = customers;
 		this.icecream = icecream;
 		
+		moneyFormat = NumberFormat.getCurrencyInstance();
+		
 		//Panes
 		BorderPane basePane = new BorderPane();
 		basePane.setPadding(new Insets(15));
 		
-		
-		//cone[cake, sugar, waffle] Flavors: 3
-		//sundae, flavors: 1, nuts, extraFlavor
-		//Split, flavors: 1, nuts, 3 extra flavors
-		//float, nothing
-		//Soda, flavors: 1
-		
 		basePane.setRight(setupRightPane());
 		basePane.setLeft(setupLeftPane());
 		
-				
 		scene = new Scene(basePane);
 	}
 	
@@ -95,11 +97,14 @@ public class CheckoutState extends AppState {
 	
 	private VBox setupRightPane() {
 		VBox rightPane = new VBox();
+		rightPane.setSpacing(5);
+		rightPane.setPadding(new Insets(0, 5, 5, 5));
 		
-		//Setup combo boxes
+		//Type combo box
 		String orderTypes[] = {"Cone", "Sundae", "Split", "Float", "Soda"};
 		ObservableList<String> orderTypesList = FXCollections.observableArrayList(orderTypes);
 		
+		//Setup compbo flavors
 		String flavors[] = new String[icecream.size()];
 		for(int i = 0; i < icecream.size(); i++) {
 			flavors[i] = icecream.get(i).getFlavor();
@@ -107,11 +112,7 @@ public class CheckoutState extends AppState {
 		
 		ObservableList<String> flavorTypesList = FXCollections.observableArrayList(flavors);
 		
-		//Setup compbo flavors
 		comboFlavors = new ComboBox[MAX_FLAVORS];
-		
-		
-		
 		ComboBox<String> comboOrderType = new ComboBox(orderTypesList);
 		comboOrderType.valueProperty().addListener(new ChangeListener<String>() {
 
@@ -120,6 +121,7 @@ public class CheckoutState extends AppState {
 					String previousValue, String value) {
 			
 				iceCreamSelected(value);
+				clearFields();
 			}
 			
 		});
@@ -129,27 +131,79 @@ public class CheckoutState extends AppState {
 		//Cone
 		comboCone = new ComboBox<String>();
 		comboCone.getItems().addAll("Cake Cone", "Sugar Cone", "Waffle Cone");
+		comboCone.setDisable(true);
+		comboCone.valueProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> list,
+					String previousValue, String value) {
+				
+				updateFields();
+			}
+			
+		});
 		rightPane.getChildren().addAll(new Label("Cone Type:"), comboCone);
 		
 		//Flavors
 		rightPane.getChildren().add(new Label("Flavors:"));
 		for(int i = 0; i < MAX_FLAVORS; i++) {
+			final int index = i;
 			comboFlavors[i] = new ComboBox<String>(flavorTypesList);
 			comboFlavors[i].setDisable(true);
+			comboFlavors[i].valueProperty().addListener(new ChangeListener<String>() {
+
+				@Override
+				public void changed(ObservableValue<? extends String> list,
+						String previousValue, String value) {
+					
+					tempServing.addIceCreamAtPos(
+						index, 
+						icecream.get(comboFlavors[index].getSelectionModel().getSelectedIndex())
+					);
+					
+					updateFields();
+				}
+				
+			});
 			
 			rightPane.getChildren().add(comboFlavors[i]);
 		}
 		
 		//Extras
 		rightPane.getChildren().add(new Label("Icecream Extras:"));
-//		comboExtras = new ComboBox[MAX_EXTRAS];
-//		
-//		for(int i = 0; i < MAX_EXTRAS; i++) {
-//			comboExtras[i] = new ComboBox<String>(flavorTypesList);
-//			comboExtras[i].setDisable(true);
-//			
-//			rightPane.getChildren().add(comboFlavors[i]);
-//		}
+		comboExtras = new ComboBox[MAX_EXTRAS];
+		ObservableList<String> orderExtrasList = FXCollections.observableArrayList(IceCreamExtra.getAll());
+		
+		for(int i = 0; i < MAX_EXTRAS; i++) {
+			final int index = i;
+			comboExtras[i] = new ComboBox<String>(orderExtrasList);
+			comboExtras[i].setDisable(true);
+			comboExtras[i].valueProperty().addListener(new ChangeListener<String>() {
+
+				@Override
+				public void changed(ObservableValue<? extends String> list,
+						String previousValue, String value) {
+					
+					//Select extra and add to ice cream
+					tempServing.addExtraAtPos(
+						index, 
+						comboExtras[index].getSelectionModel().getSelectedIndex()
+					);
+					
+					updateFields();
+				}
+				
+			});
+			
+			rightPane.getChildren().add(comboExtras[i]);
+		}
+		
+		//Add and estimate price
+		btnAddToOrder = new Button("Add to order");
+		btnAddToOrder.setDisable(true);
+		btnAddToOrder.setOnAction(e -> System.out.println(tempServing.getPrice()));
+		
+		rightPane.getChildren().addAll(btnAddToOrder);
 
 		return rightPane;
 	}
@@ -176,14 +230,52 @@ public class CheckoutState extends AppState {
 			break;
 		}
 		
-		setAllowedFlavors(tempServing.getMaxScoops());
-		System.out.println(tempServing.getMaxScoops());
+		setAllowedCombo(tempServing.getMaxScoops(), comboFlavors);
+		setAllowedCombo(tempServing.getMaxExtras(), comboExtras);
+		checkOtherFields();
 	}
 	
-	private void setAllowedFlavors(int num) {
+	//Helper functions
+	private void checkOtherFields() {
+		
+		//Check for cone
+		if(tempServing.getClass() == IceCreamCone.class) comboCone.setDisable(false);
+		else comboCone.setDisable(true);
+		
+	}
+	
+	private void clearFields() {
+		for(int i = 0; i < MAX_FLAVORS; i++) comboFlavors[i].getSelectionModel().clearSelection();
+		for(int i = 0; i < MAX_EXTRAS; i++) comboExtras[i].getSelectionModel().clearSelection();
+		comboCone.getSelectionModel().clearSelection();
+		btnAddToOrder.setDisable(true);
+	}
+	
+	private void updateFields() {
+		if(formIsValid()) {
+			btnAddToOrder.setDisable(false);
+			btnAddToOrder.setText("Add To Order: " + moneyFormat.format(tempServing.getPrice()));
+		} else {
+			btnAddToOrder.setDisable(true);
+			btnAddToOrder.setText("Add To Order");
+		}
+	}
+	
+	private boolean formIsValid() {
+		for(int i = 0; i < tempServing.getMaxScoops(); i++) {
+			if(comboFlavors[i].getSelectionModel().getSelectedIndex() == -1) return false;
+		}
+		
+		for(int i = 0; i < tempServing.getMaxExtras(); i++) 
+			if(comboExtras[i].getSelectionModel().getSelectedIndex() == -1) return false;
+		
+		return true;
+	}
+	
+	private void setAllowedCombo(int num, ComboBox[] boxes) {
 		for(int i = 0; i < MAX_FLAVORS; i++) {
-			if(i < num) comboFlavors[i].setDisable(false);
-			else comboFlavors[i].setDisable(true);
+			if(i < num) boxes[i].setDisable(false);
+			else boxes[i].setDisable(true);
 		}
 	}
 

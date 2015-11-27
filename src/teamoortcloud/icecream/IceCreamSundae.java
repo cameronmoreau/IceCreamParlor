@@ -2,7 +2,18 @@ package teamoortcloud.icecream;
 
 public class IceCreamSundae extends Serving {
 	
-	int extras[];
+	boolean hasNuts;
+	
+	public IceCreamSundae() {
+		super();
+	}
+
+	@Override
+	public double getPrice() {
+		double price = super.getPrice();
+		if(hasNuts) price++;
+		return price;
+	}
 
 	@Override
 	public int getMaxScoops() {
@@ -13,6 +24,4 @@ public class IceCreamSundae extends Serving {
 	public int getMaxExtras() {
 		return 1;
 	}
-
-	
 }
