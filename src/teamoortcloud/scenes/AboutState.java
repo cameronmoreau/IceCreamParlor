@@ -9,17 +9,19 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import teamoortcloud.engine.App;
 import teamoortcloud.entities.FallingIceCream;
  
-public class MenuState extends AppState {
+public class AboutState extends AppState {
 	
-	Button btnStart, btnHighScore, btnAbout;
+	Button btnCameron, btnAdhish, btnRobert, btnBack;
+	Label lblName;
 
-	public MenuState(StateManager sm) {
+	public AboutState(StateManager sm) {
 		super(sm);
 		
 		//Setup basic panes
@@ -45,22 +47,29 @@ public class MenuState extends AppState {
 		final int minButtonHeight = 45;
 		
 		//Setup buttons and attributes
-		btnStart = new Button("Start Game");
-		btnHighScore = new Button("High Scores");
-		btnAbout = new Button("About");
+		btnCameron = new Button("Cameron Moreau");
+		btnAdhish = new Button("Adhish Deshpande");
+		btnRobert = new Button("Robert Page");
+		btnBack = new Button("Back");
+		lblName = new Label("				Team OORT Cloud");
 		
-		btnStart.setMinWidth(minButtonWidth);
-		btnStart.setMinHeight(minButtonHeight);
-		btnHighScore.setMinWidth(minButtonWidth);
-		btnHighScore.setMinHeight(minButtonHeight);
-		btnAbout.setMinWidth(minButtonWidth);
-		btnAbout.setMinHeight(minButtonHeight);
+		btnCameron.setMinWidth(minButtonWidth);
+		btnCameron.setMinHeight(minButtonHeight);
+		btnAdhish.setMinWidth(minButtonWidth);
+		btnAdhish.setMinHeight(minButtonHeight);
+		btnRobert.setMinWidth(minButtonWidth);
+		btnRobert.setMinHeight(minButtonHeight);
+		btnBack.setMinWidth(minButtonWidth);
+		btnBack.setMinHeight(minButtonHeight);
+		lblName.setMinWidth(minButtonWidth);
+		lblName.setMinHeight(minButtonHeight);
 		
-		btnStart.setOnAction(e -> sm.setStage(StateManager.STATE_GAME));
-		btnHighScore.setOnAction(e -> buttonClicked(e));
-		btnAbout.setOnAction(e -> sm.setStage(StateManager.STATE_ABOUT));
+		btnCameron.setOnAction(e -> buttonClicked(e));
+		btnAdhish.setOnAction(e -> buttonClicked(e));
+		btnRobert.setOnAction(e -> buttonClicked(e));
+		btnBack.setOnAction(e -> sm.setStage(StateManager.STATE_MENU));
 		
-		pane.getChildren().addAll(btnStart, btnHighScore, btnAbout);	
+		pane.getChildren().addAll(lblName, btnCameron, btnAdhish, btnRobert, btnBack);	
 	}
 	
 	private void initCanvas(Group canvasPane) {

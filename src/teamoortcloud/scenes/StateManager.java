@@ -6,6 +6,7 @@ public class StateManager {
 	
 	public static final int STATE_MENU = 0;
 	public static final int STATE_GAME = 1;
+	public static final int STATE_ABOUT = 2;
 	
 	private Stage stage;
 	
@@ -26,6 +27,8 @@ public class StateManager {
 		case STATE_GAME:
 			stage.setScene(new GameState(this).scene);
 			break;
+		case STATE_ABOUT:
+			stage.setScene(new AboutState(this).scene);
 		}
 	}
 
