@@ -17,7 +17,7 @@ import teamoortcloud.entities.FallingIceCream;
  
 public class MenuState extends AppState {
 	
-	Button btnStart, btnHighScore, btnAbout;
+	Button btnStart, btnHighScore, btnAbout, btnFile;
 
 	public MenuState(StateManager sm) {
 		super(sm);
@@ -48,6 +48,7 @@ public class MenuState extends AppState {
 		btnStart = new Button("Start Game");
 		btnHighScore = new Button("High Scores");
 		btnAbout = new Button("About");
+		btnFile = new Button("Settings");
 		
 		btnStart.setMinWidth(minButtonWidth);
 		btnStart.setMinHeight(minButtonHeight);
@@ -55,12 +56,15 @@ public class MenuState extends AppState {
 		btnHighScore.setMinHeight(minButtonHeight);
 		btnAbout.setMinWidth(minButtonWidth);
 		btnAbout.setMinHeight(minButtonHeight);
+		btnFile.setMinWidth(minButtonWidth);
+		btnFile.setMinHeight(minButtonHeight);
 		
 		btnStart.setOnAction(e -> sm.setStage(StateManager.STATE_GAME));
 		btnHighScore.setOnAction(e -> buttonClicked(e));
 		btnAbout.setOnAction(e -> sm.setStage(StateManager.STATE_ABOUT));
+		btnFile.setOnAction(e -> sm.setStage(StateManager.STATE_FILE));
 		
-		pane.getChildren().addAll(btnStart, btnHighScore, btnAbout);	
+		pane.getChildren().addAll(btnStart, btnFile, btnAbout);	
 	}
 	
 	private void initCanvas(Group canvasPane) {

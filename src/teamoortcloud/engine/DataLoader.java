@@ -15,13 +15,14 @@ public class DataLoader {
 	private static final int WORKER = 0;
 	private static final int CUSTOMER = 1;
 	private static final int ICECREAM = 2;
+
 	
 	//id, type, name, customers served, scoops served, amount earned, patience/stamina/none
 	public static ArrayList<Worker> getWorkers() {
 		ArrayList<Worker> workers = new ArrayList<>();
 		
 		try {
-			Scanner fileReader = new Scanner(new FileReader(getFileName(WORKER)));
+			Scanner fileReader = new Scanner(new FileReader(getFilePass(WORKER)));
 			String line;
 			
 			while(fileReader.hasNextLine()) {
@@ -66,7 +67,7 @@ public class DataLoader {
         public static ArrayList<Customer> getCustomers() {
             ArrayList<Customer> customer = new ArrayList<>();
             try {
-			Scanner fileReader = new Scanner(new FileReader(getFileName(CUSTOMER)));
+			Scanner fileReader = new Scanner(new FileReader(getFilePass(CUSTOMER)));
 			String line;
 			
 			while(fileReader.hasNextLine()) {
@@ -87,7 +88,8 @@ public class DataLoader {
                                 
                                 customer.add(new Customer(id, name, wallet, happiness, pennies, nickles, 
                                         dimes, quarters, dollar1, dollar5, dollar10, dollar20));
-                        }        
+                        } 
+			fileReader.close();
             }                    
             catch (Exception e) {
 			e.printStackTrace();
@@ -99,7 +101,7 @@ public class DataLoader {
         public static ArrayList<IceCream> getIceCream() {
             ArrayList<IceCream> icecream = new ArrayList<>();
             try {
-			Scanner fileReader = new Scanner(new FileReader(getFileName(ICECREAM)));
+			Scanner fileReader = new Scanner(new FileReader(getFilePass(ICECREAM)));
 			String line;
 			
 			while(fileReader.hasNextLine()) {
@@ -112,7 +114,8 @@ public class DataLoader {
 				String description= fields[4].trim();
                                 int scoops= Integer.parseInt(fields[5].trim());
                                 icecream.add(new IceCream(id, price, flavor, name, description, scoops));
-                        }        
+                        }
+			fileReader.close();
             }                    
             catch (Exception e) {
 			e.printStackTrace();
@@ -121,7 +124,7 @@ public class DataLoader {
 		return icecream;
 	}
         
-	private static String getFileName(int type) {
+	/*private static String getFileName(int type) {
 		switch(type) {
 		case WORKER:
 			return "data/TestWorker.txt";
@@ -129,6 +132,40 @@ public class DataLoader {
 			return "data/TestCustomer.txt";
 		case ICECREAM:
 			return "data/TestIceCream.txt";
+		default:
+			return null;
+		}
+	}*/
+	private static String getFilePass(int type)
+	{
+		String workerFile = "data/TestWorker.txt", customerFile = "data/TestCustomer.txt", iceCreamFile = "data/TestIceCream.txt";
+		try {
+			Scanner fileReader = new Scanner(new FileReader("data/FileNames.txt"));
+			String line;
+			
+			while(fileReader.hasNextLine()) {
+				line = fileReader.nextLine();
+				String[] fields = line.split(",");
+                String ftype = fields[0];
+                if(ftype=="Worker")
+                	workerFile= fields[1].trim();
+                if(ftype=="Customer")
+                	customerFile= fields[1].trim();
+                if(ftype=="IceCream")
+                	iceCreamFile= fields[1].trim();
+                }
+			fileReader.close();
+            }                    
+            catch (Exception e) {
+			e.printStackTrace();
+		}
+		switch(type) {
+		case WORKER:
+			return workerFile;
+		case CUSTOMER:
+			return customerFile;
+		case ICECREAM:
+			return iceCreamFile;
 		default:
 			return null;
 		}

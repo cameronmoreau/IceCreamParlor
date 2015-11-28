@@ -27,7 +27,7 @@ public class App extends Application {
 		sm = new StateManager(stage);
 		
 		//Setup basic attributes
-		stage.setTitle("Game title!");
+		stage.setTitle("Honey Badger Ice Cream Parlor!");
 		stage.setWidth(SCREEN_WIDTH);
 		stage.setHeight(SCREEN_HEIGHT);
 		

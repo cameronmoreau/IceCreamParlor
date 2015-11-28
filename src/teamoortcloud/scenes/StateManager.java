@@ -7,6 +7,7 @@ public class StateManager {
 	public static final int STATE_MENU = 0;
 	public static final int STATE_GAME = 1;
 	public static final int STATE_ABOUT = 2;
+	public static final int STATE_FILE = 3;
 	
 	private Stage stage;
 	
@@ -29,6 +30,10 @@ public class StateManager {
 			break;
 		case STATE_ABOUT:
 			stage.setScene(new AboutState(this).scene);
+			break;
+		case STATE_FILE:
+			stage.setScene(new FileState(this).scene);
+			break;
 		}
 	}
 

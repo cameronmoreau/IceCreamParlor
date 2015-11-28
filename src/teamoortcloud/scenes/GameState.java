@@ -49,7 +49,6 @@ public class GameState extends AppState {
 		//subManager = new StateManager();
 		
 		game = new GameShop();
-		
 		workers = DataLoader.getWorkers();
         customers = DataLoader.getCustomers();
         icecream = DataLoader.getIceCream();
