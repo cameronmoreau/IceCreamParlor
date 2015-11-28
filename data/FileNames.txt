@@ -1,3 +1,0 @@
-Worker,data/TestWorker.txt
-Customer,data/TestCustomer.txt
-IceCream,data/TestIceCream.txt
