@@ -85,9 +85,11 @@ public class CheckoutState extends AppState {
 		Button btnRemoveItem = new Button("Remove Item");
 		Button btnCheckoutCredit = new Button("Checkout with Credit");
 		Button btnCheckoutCash = new Button("Checkout with Cash  ");
-		
+
 		btnRemoveItem.setOnAction(e -> removeFromOrder());
-		
+		btnCheckoutCredit.setOnAction(e -> checkoutWithCredit());
+		btnCheckoutCash.setOnAction(e -> checkoutWithCash());
+
 		BorderPane borderPane = new BorderPane();
 		borderPane.setLeft(btnRemoveItem);
 		borderPane.setRight(new VBox(btnCheckoutCredit, btnCheckoutCash));
@@ -96,8 +98,15 @@ public class CheckoutState extends AppState {
 		
 		return leftPane;
 	}
-	
-	private VBox setupRightPane() {
+
+    private void checkoutWithCash() {
+    }
+
+    private void checkoutWithCredit() {
+        this.sm.setScene(new CheckoutCreditState(this.sm).scene);
+    }
+
+    private VBox setupRightPane() {
 		VBox rightPane = new VBox();
 		rightPane.setSpacing(5);
 		rightPane.setPadding(new Insets(0, 5, 5, 5));

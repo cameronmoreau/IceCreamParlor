@@ -92,4 +92,9 @@ public class ShopSimulation {
 			}
 		}
 	}
+
+	public void showSignaturePad() {
+
+
+    }
 }

@@ -37,8 +37,6 @@ public class GameState extends AppState {
 	
 	public GameState(StateManager sm) {
 		super(sm);
-		
-		//subManager = new StateManager();
 		shop = new Shop();
 		game = new ShopSimulation();
 
@@ -52,6 +50,7 @@ public class GameState extends AppState {
 		
 		scene = new Scene(rootPane);
 		setupStyle();
+        setupSubWindow();
 	}
 	
 	private BorderPane initToolBar() {
@@ -163,36 +162,26 @@ public class GameState extends AppState {
 		
 		return pane;
 	}
-	
+
+    private void setupSubWindow() {
+        //Setup Stage
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(this.scene.getWindow());
+        stage.setMinWidth(300);
+
+        //Setup sub manager
+        this.subManager = new StateManager(stage);
+    }
+
 	private void checkoutWindow() {
-		
-		//Stage
-		Stage stage = new Stage();
-		stage.initModality(Modality.WINDOW_MODAL);
-		stage.initOwner(this.scene.getWindow());
-		stage.setTitle("Cash Register");
-		//stage.setWidth(App.SCREEN_WIDTH);
-		
-		
-		
-		//stage.setScene(new Scene(basePane, 450, 300));
-		AppState state = new CheckoutState(null, shop);
-		stage.setScene(state.scene);
-		stage.show();
+		this.subManager.setScene(new CheckoutState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
 	}
 	
 	private void employeesWindow() {
-		Stage stage = new Stage();
-		stage.initModality(Modality.WINDOW_MODAL);
-		stage.initOwner(this.scene.getWindow());
-		//stage.setWidth(App.SCREEN_WIDTH);
-		
-		
-		
-		//stage.setScene(new Scene(basePane, 450, 300));
-		AppState state = new EmployeeManagerState(null, shop);
-		stage.setScene(state.scene);
-		stage.show();
+        this.subManager.setScene(new EmployeeManagerState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
 	}
 	
 	private void startGame() {
