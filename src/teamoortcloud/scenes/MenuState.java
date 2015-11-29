@@ -3,6 +3,7 @@ package teamoortcloud.scenes;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import teamoortcloud.engine.App;
@@ -17,14 +19,14 @@ import teamoortcloud.entities.FallingIceCream;
  
 public class MenuState extends AppState {
 	
-	Button btnStart, btnHighScore, btnAbout, btnFile;
+	Button btnStart, btnAbout, btnSettings;
 
 	public MenuState(StateManager sm) {
 		super(sm);
 		
 		//Setup basic panes
 		StackPane rootPane = new StackPane();
-		VBox pane = new VBox();
+		HBox pane = new HBox();
 		Group canvasPane = new Group();
 		
 		rootPane.getChildren().addAll(canvasPane, pane);
@@ -34,37 +36,40 @@ public class MenuState extends AppState {
 		initFrame(pane);
 		
 		scene = new Scene(rootPane);
+		setupStyle();
 	}
 	
 	//setup menu frame
-	private void initFrame(VBox pane) {
+	private void initFrame(HBox pane) {
 		pane.setSpacing(25);
 		pane.setAlignment(Pos.CENTER);
+        pane.setPadding(new Insets(275, 0, 0, 0));
 		
-		final int minButtonWidth = 300;
+		final int minButtonWidth = 200;
 		final int minButtonHeight = 45;
 		
 		//Setup buttons and attributes
 		btnStart = new Button("Start Game");
-		btnHighScore = new Button("High Scores");
 		btnAbout = new Button("About");
-		btnFile = new Button("Settings");
+        btnSettings = new Button("Settings");
 		
 		btnStart.setMinWidth(minButtonWidth);
 		btnStart.setMinHeight(minButtonHeight);
-		btnHighScore.setMinWidth(minButtonWidth);
-		btnHighScore.setMinHeight(minButtonHeight);
 		btnAbout.setMinWidth(minButtonWidth);
 		btnAbout.setMinHeight(minButtonHeight);
-		btnFile.setMinWidth(minButtonWidth);
-		btnFile.setMinHeight(minButtonHeight);
+        btnSettings.setMinWidth(minButtonWidth);
+        btnSettings.setMinHeight(minButtonHeight);
+
+		btnStart.getStyleClass().add("menu-button");
+		btnAbout.getStyleClass().add("menu-button");
+        btnSettings.getStyleClass().add("menu-button");
 		
 		btnStart.setOnAction(e -> sm.setStage(StateManager.STATE_GAME));
 		//btnHighScore.setOnAction(e -> buttonClicked(e));
 		btnAbout.setOnAction(e -> sm.setStage(StateManager.STATE_ABOUT));
-		btnFile.setOnAction(e -> sm.setStage(StateManager.STATE_FILE));
+        btnSettings.setOnAction(e -> sm.setStage(StateManager.STATE_FILE));
 		
-		pane.getChildren().addAll(btnStart, btnFile, btnAbout);	
+		pane.getChildren().addAll(btnStart, btnSettings, btnAbout);
 	}
 	
 	private void initCanvas(Group canvasPane) {
