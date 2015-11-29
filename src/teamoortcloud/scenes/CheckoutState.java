@@ -14,6 +14,7 @@ import teamoortcloud.icecream.IceCreamSoda;
 import teamoortcloud.icecream.IceCreamSundae;
 import teamoortcloud.icecream.Serving;
 import teamoortcloud.other.Order;
+import teamoortcloud.other.Shop;
 import teamoortcloud.people.Customer;
 import teamoortcloud.people.Worker;
 import javafx.beans.value.ChangeListener;
@@ -40,10 +41,7 @@ public class CheckoutState extends AppState {
 	Order order;
 	
 	NumberFormat moneyFormat;
-	
-	ArrayList<Worker> workers;
-	ArrayList<Customer> customers;
-	ArrayList<IceCream> icecream;
+	Shop shop;
 	
 	ListView<String> orderList;
 	
@@ -57,11 +55,9 @@ public class CheckoutState extends AppState {
 		super(sm);
 	}
 	
-	public CheckoutState(StateManager sm, ArrayList<Worker> workers, ArrayList<Customer> customers, ArrayList<IceCream> icecream) {
+	public CheckoutState(StateManager sm, Shop shop) {
 		super(sm);
-		this.workers = workers;
-		this.customers = customers;
-		this.icecream = icecream;
+		this.shop = shop;
 		
 		order = new Order();
 		moneyFormat = NumberFormat.getCurrencyInstance();
@@ -111,12 +107,8 @@ public class CheckoutState extends AppState {
 		ObservableList<String> orderTypesList = FXCollections.observableArrayList(orderTypes);
 		
 		//Setup compbo flavors
-		String flavors[] = new String[icecream.size()];
-		for(int i = 0; i < icecream.size(); i++) {
-			flavors[i] = icecream.get(i).getFlavor();
-		}
 		
-		ObservableList<String> flavorTypesList = FXCollections.observableArrayList(flavors);
+		ObservableList<String> flavorTypesList = getFlavorListData();
 		
 		comboFlavors = new ComboBox[MAX_FLAVORS];
 		ComboBox<String> comboOrderType = new ComboBox(orderTypesList);
@@ -166,7 +158,7 @@ public class CheckoutState extends AppState {
 					if(selectedIndex != -1) {			
 						tempServing.addIceCreamAtPos(
 							index, 
-							icecream.get(selectedIndex)
+							shop.getIcecream().get(selectedIndex)
 						);
 					}
 					
@@ -253,6 +245,17 @@ public class CheckoutState extends AppState {
 		for(Serving s : order.getServings()) array.add(s.getName() + ": " + moneyFormat.format(s.getPrice()));
 		return array;
 	}
+
+    private ObservableList<String> getFlavorListData() {
+		ObservableList<String> array = FXCollections.observableArrayList();
+		for(IceCream c : shop.getIcecream()) {
+            String s = c.getName();
+
+            if(c.getScoops() < 1) s += " (Out of stock)";
+            array.add(s);
+        }
+		return array;
+	}
 	
 	private void addToOrder() {
 		order.addServing(tempServing);
@@ -299,6 +302,7 @@ public class CheckoutState extends AppState {
 		
 		for(int i = 0; i < tempServing.getMaxScoops(); i++) {
 			if(comboFlavors[i].getSelectionModel().getSelectedIndex() == -1) return false;
+            if(comboFlavors[i].getSelectionModel().getSelectedItem().contains("Out of stock")) return false;
 		}
 		
 		for(int i = 0; i < tempServing.getMaxExtras(); i++) 

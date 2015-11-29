@@ -9,7 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class GameShop {
+public class ShopSimulation {
 	
 	public static final int TILE_WIDTH = 45;
 	public static final int TILE_HEIGHT = 18;
@@ -20,7 +20,7 @@ public class GameShop {
 	CustomerManager customerManager;
 	Image bg;
 	
-	public GameShop() {
+	public ShopSimulation() {
 		tiles = new int[TILE_HEIGHT][TILE_WIDTH];
 		
 		tiles[3][4] = 1;

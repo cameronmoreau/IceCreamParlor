@@ -4,10 +4,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -15,10 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -28,18 +21,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import teamoortcloud.engine.App;
 import teamoortcloud.engine.DataLoader;
-import teamoortcloud.engine.GameShop;
+import teamoortcloud.engine.ShopSimulation;
 import teamoortcloud.icecream.IceCream;
+import teamoortcloud.other.Shop;
 import teamoortcloud.people.Customer;
 import teamoortcloud.people.Worker;
 
 public class GameState extends AppState {
-	
-	ArrayList<Worker> workers;
-    ArrayList<Customer> customers;
-    ArrayList<IceCream> icecream;
+
+	Shop shop;
     
-	GameShop game;
+	ShopSimulation game;
 	
 	StateManager subManager;
 	
@@ -47,11 +39,8 @@ public class GameState extends AppState {
 		super(sm);
 		
 		//subManager = new StateManager();
-		
-		game = new GameShop();
-		workers = DataLoader.getWorkers();
-        customers = DataLoader.getCustomers();
-        icecream = DataLoader.getIceCream();
+		shop = new Shop();
+		game = new ShopSimulation();
 
         
 		//Setup basic panes + contents
@@ -187,7 +176,7 @@ public class GameState extends AppState {
 		
 		
 		//stage.setScene(new Scene(basePane, 450, 300));
-		AppState state = new CheckoutState(null, workers, customers, icecream);
+		AppState state = new CheckoutState(null, shop);
 		stage.setScene(state.scene);
 		stage.show();
 	}
@@ -201,7 +190,7 @@ public class GameState extends AppState {
 		
 		
 		//stage.setScene(new Scene(basePane, 450, 300));
-		AppState state = new EmployeeManagerState(null, workers);
+		AppState state = new EmployeeManagerState(null, shop);
 		stage.setScene(state.scene);
 		stage.show();
 	}
@@ -212,7 +201,7 @@ public class GameState extends AppState {
 
 			@Override
 			public void run() {
-				for(Customer c : customers) {
+				for(Customer c : shop.getCustomers()) {
 					game.addCustomer();
 					try {
 						Thread.sleep(300);

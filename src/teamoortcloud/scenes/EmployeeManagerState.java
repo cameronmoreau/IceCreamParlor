@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import teamoortcloud.other.Shop;
 import teamoortcloud.people.Cashier;
 import teamoortcloud.people.Stocker;
 import teamoortcloud.people.Worker;
@@ -27,7 +28,7 @@ public class EmployeeManagerState extends AppState {
 	final static String[] WORKER_TYPES = {"Worker", "Stocker", "Cashier"};
 	NumberFormat moneyFormat;
 	
-	ArrayList<Worker> employees;
+	Shop shop;
 	Worker selectedEmployee;
 	
 	Label labelSelectedEmployee;
@@ -41,9 +42,9 @@ public class EmployeeManagerState extends AppState {
 		super(sm);
 	}
 	
-	public EmployeeManagerState(StateManager sm, ArrayList<Worker> employees) {
+	public EmployeeManagerState(StateManager sm, Shop shop) {
 		super(sm);
-		this.employees = employees;
+		this.shop = shop;
 		moneyFormat = NumberFormat.getCurrencyInstance();
 		
 		//Panes
@@ -69,7 +70,7 @@ public class EmployeeManagerState extends AppState {
 			public void changed(ObservableValue<? extends String> list,
 					String previousValue, String value) {
 				
-				selectedEmployee = employees.get(employeeList.getSelectionModel().getSelectedIndex());
+				selectedEmployee = shop.getEmployees().get(employeeList.getSelectionModel().getSelectedIndex());
 				updateSelectedEmployee();
 			}
 			
@@ -184,7 +185,7 @@ public class EmployeeManagerState extends AppState {
 		}
 		
 		//Update list
-		employees.add(temp);
+		shop.addWorker(temp);
 		employeeList.setItems(getEmployeesListData());
 		
 		//Clear lists
@@ -202,7 +203,7 @@ public class EmployeeManagerState extends AppState {
 	
 	private ObservableList<String> getEmployeesListData() {
 		ObservableList<String> array = FXCollections.observableArrayList();
-		for(Worker w : employees) array.add(w.getName() + ": " + w.getType());
+		for(Worker w : shop.getEmployees()) array.add(w.getName() + ": " + w.getType());
 		return array;
 	}
 }

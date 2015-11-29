@@ -39,7 +39,7 @@
 //import javafx.stage.Stage;
 //import teamoortcloud.engine.App;
 //import teamoortcloud.engine.DataLoader;
-//import teamoortcloud.engine.GameShop;
+//import teamoortcloud.engine.ShopSimulation;
 //import teamoortcloud.icecream.IceCream;
 //import teamoortcloud.people.Customer;
 //import teamoortcloud.people.Worker;
