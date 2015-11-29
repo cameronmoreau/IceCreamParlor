@@ -1,7 +1,12 @@
 package teamoortcloud.scenes;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -51,11 +56,6 @@ public class FileState extends AppState {
 		final int minButtonWidth = 300;
 		final int minButtonHeight = 45;
 		
-		//Setup buttons and attributes
-		JFileChooser fc = new JFileChooser();
-	    //FileNameExtensionFilter filter = new FileNameExtensionFilter("txt");
-	    //fc.setFileFilter(filter);
-		
 		btnWorker = new Button("Open Worker File");
 		btnCustomer = new Button("Open Customer File");
 		btnIceCream = new Button("Open Ice Cream File");
@@ -78,7 +78,27 @@ public class FileState extends AppState {
 		          int returnValue = fileChooser.showOpenDialog(null);
 		          if (returnValue == JFileChooser.APPROVE_OPTION) {
 		            fWorker = fileChooser.getSelectedFile();
-		            
+					try {
+						Scanner fileReader = new Scanner(new FileReader("data/FileNames.txt"));
+					String[] line = new String[3];
+					int linenum = 0;
+					while(fileReader.hasNextLine()) 
+					{
+						line[linenum] = fileReader.nextLine();
+		            }
+					fileReader.close();
+					String[] original = line[0].split(",");
+					String[] change = line[0].split(",");
+					change[1]=fWorker.getName();
+					line[0].replace(original[1],change[1]);
+					FileWriter fw = new FileWriter("data/FileNames.txt");
+					for(int i=0;i<3;i++)
+						fw.write(line[i]);
+					fw.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
             }
         }});
 		
