@@ -1,5 +1,8 @@
 package teamoortcloud.people;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class Worker {
 	
 	long id;
@@ -67,6 +70,22 @@ public class Worker {
 
 	public void setMoneyTaken(double moneyTaken) {
 		this.moneyTaken = moneyTaken;
+	}
+	
+	public String getType() {
+		return "Worker";
+	}
+	
+	public StringProperty nameProperty() { 
+		return new SimpleStringProperty(name); 
+	}
+	
+	public StringProperty typeProperty() {
+		return new SimpleStringProperty(getType());
+	}
+	
+	public StringProperty onBreakProperty() {
+		return new SimpleStringProperty("N/A");
 	}
 
 	@Override

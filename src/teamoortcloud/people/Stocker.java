@@ -1,5 +1,8 @@
 package teamoortcloud.people;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class Stocker extends Worker {
 
 	int stamina;
@@ -15,6 +18,20 @@ public class Stocker extends Worker {
 			long scoopsServed, double moneyTaken, int stamina) {
 		super(id, name, customersServed, scoopsServed, moneyTaken);
 		this.stamina = stamina;
+	}
+	
+	public Stocker(long id, String name) {
+		super(id, name);
+	}
+	
+	@Override
+	public StringProperty onBreakProperty() {
+		return new SimpleStringProperty(String.valueOf(onBreak));
+	}
+	
+	@Override
+	public String getType() {
+		return "Stocker";
 	}
 
 	@Override

@@ -183,25 +183,16 @@ public class GameState extends AppState {
 	}
 	
 	private void employeesWindow() {
-		VBox pane = new VBox();
-		
 		Stage stage = new Stage();
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.initOwner(this.scene.getWindow());
-		stage.setTitle("Employees");
+		//stage.setWidth(App.SCREEN_WIDTH);
 		
 		
-		TableView employeeTable = new TableView();
-		employeeTable.getColumns().addAll(
-			new TableColumn("Name"),
-			new TableColumn("Type"),
-			new TableColumn("On Break"),
-			new TableColumn("Edit")
-		);
 		
-		pane.getChildren().add(employeeTable);
-		
-		stage.setScene(new Scene(pane, 300, 300));
+		//stage.setScene(new Scene(basePane, 450, 300));
+		AppState state = new EmployeeManagerState(null, workers);
+		stage.setScene(state.scene);
 		stage.show();
 	}
 
