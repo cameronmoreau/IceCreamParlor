@@ -56,9 +56,13 @@ public class GameState extends AppState {
         
 		//Setup basic panes + contents
 		VBox rootPane = new VBox();
-		rootPane.getChildren().addAll(initToolBar(), initGame());
+		rootPane.setStyle("-fx-background-color: #474F53;");
+		rootPane.getChildren().addAll(initGame(), initToolBar());
+		
+		startGame();
 		
 		scene = new Scene(rootPane);
+		setupStyle();
 	}
 	
 	private BorderPane initToolBar() {
@@ -71,11 +75,10 @@ public class GameState extends AppState {
 		
 		leftPane.setSpacing(PANE_SPACING);
 		leftPane.setPadding(new Insets(PANE_PADDING));
-		leftPane.setStyle("-fx-background-color: orange;");
+		pane.setStyle("-fx-background-color: #3C4346;");
 		
 		rightPane.setSpacing(PANE_SPACING);
 		rightPane.setPadding(new Insets(PANE_PADDING));
-		rightPane.setStyle("-fx-background-color: red;");
 		
 		//Left ToolBar
 		Button btnCashier, btnStocker, btnManager, btnShop;
@@ -83,6 +86,11 @@ public class GameState extends AppState {
 		btnStocker = new Button("Stocker");
 		btnManager = new Button("Employees");
 		btnShop = new Button("Shop Settings");
+		
+		btnCashier.getStyleClass().add("menu-button");
+		btnStocker.getStyleClass().add("menu-button");
+		btnManager.getStyleClass().add("menu-button");
+		btnShop.getStyleClass().add("menu-button");
 		
 		btnManager.setOnAction(e -> employeesWindow());
 		btnShop.setOnAction(e -> game.addCustomer());
@@ -92,7 +100,9 @@ public class GameState extends AppState {
 		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
 		
 		//right ToolBar
-		Button btnStats = new Button("stats");
+		Button btnStats = new Button("Shop Overview");
+		btnStats.getStyleClass().add("menu-button");
+		btnShop.getStyleClass().add("menu-button");
 		rightPane.getChildren().addAll(btnStats);
 		
 		
@@ -194,6 +204,28 @@ public class GameState extends AppState {
 		AppState state = new EmployeeManagerState(null, workers);
 		stage.setScene(state.scene);
 		stage.show();
+	}
+	
+	private void startGame() {
+		//Queue customers
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				for(Customer c : customers) {
+					game.addCustomer();
+					try {
+						Thread.sleep(300);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				return;
+			}
+			
+		}).start();
 	}
 
 }

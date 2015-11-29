@@ -12,6 +12,7 @@ public class AppState {
 		this.sm = sm;
 	}
 	
-	
-	void buttonClicked(ActionEvent e) {}
+	protected void setupStyle() {
+		scene.getStylesheets().add("file:res/styles/style.css");
+	}
 }

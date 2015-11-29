@@ -64,9 +64,6 @@ public class AboutState extends AppState {
 		lblName.setMinWidth(minButtonWidth);
 		lblName.setMinHeight(minButtonHeight);
 		
-		btnCameron.setOnAction(e -> buttonClicked(e));
-		btnAdhish.setOnAction(e -> buttonClicked(e));
-		btnRobert.setOnAction(e -> buttonClicked(e));
 		btnBack.setOnAction(e -> sm.setStage(StateManager.STATE_MENU));
 		
 		pane.getChildren().addAll(lblName, btnCameron, btnAdhish, btnRobert, btnBack);	

@@ -60,7 +60,7 @@ public class MenuState extends AppState {
 		btnFile.setMinHeight(minButtonHeight);
 		
 		btnStart.setOnAction(e -> sm.setStage(StateManager.STATE_GAME));
-		btnHighScore.setOnAction(e -> buttonClicked(e));
+		//btnHighScore.setOnAction(e -> buttonClicked(e));
 		btnAbout.setOnAction(e -> sm.setStage(StateManager.STATE_ABOUT));
 		btnFile.setOnAction(e -> sm.setStage(StateManager.STATE_FILE));
 		
