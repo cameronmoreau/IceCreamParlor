@@ -12,8 +12,7 @@ public class GameClock {
         void crappyHourBegins();
     }
 
-    //final int clockStart = 1;
-    final int clockStart = 9;
+    final int clockStart = 1;
     final int clockEnd = 11;
     final int intervalTime = 4;
 
