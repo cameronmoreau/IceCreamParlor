@@ -1,19 +1,19 @@
 package teamoortcloud.engine;
 
-import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
-
 /**
  * Created by Cameron on 11/29/15.
  */
-public class ShopLog extends Label {
+public class ShopLog {
+
+    String log;
 
     public ShopLog() {
-        super();
-        this.setTextFill(Color.web("#FFFFFF"));
+        log = "";
     }
 
-    public void addLog(String log) {
-        this.setText(log + "\n" + this.getText());
+    public void addLog(String s) {
+        log = (s + "\n" + log);
     }
+
+    public String getMessages() { return log; }
 }

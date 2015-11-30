@@ -16,7 +16,7 @@ import java.io.File;
 
 public class FileState extends AppState {
 	
-	Button btnWorker, btnCustomer, btnIceCream, btnBack;
+	Button btnWorker, btnCustomer, btnIceCream, btnReset, btnBack;
 	FileChooser fileChooser;
     File tempFile;
     DataLoader dataLoader;
@@ -44,7 +44,7 @@ public class FileState extends AppState {
 	}
 
     private void pickFile(int type) {
-        fileChooser.setTitle("Select <> file");
+        fileChooser.setTitle("Select file");
         tempFile = fileChooser.showOpenDialog(sm.getStage());
 
         //File wasnt picked
@@ -62,9 +62,10 @@ public class FileState extends AppState {
 		final int minButtonWidth = 300;
 		final int minButtonHeight = 45;
 		
-		btnWorker = new Button("Open Worker File");
-		btnCustomer = new Button("Open Customer File");
-		btnIceCream = new Button("Open Ice Cream File");
+		btnWorker = new Button();
+		btnCustomer = new Button();
+		btnIceCream = new Button();
+		btnReset = new Button("Reset Defaults");
 
         updateButtonText();
 
@@ -75,11 +76,13 @@ public class FileState extends AppState {
         btnCustomer.getStyleClass().add("menu-button");
         btnIceCream.getStyleClass().add("menu-button");
         btnBack.getStyleClass().add("menu-button");
+        btnReset.getStyleClass().add("menu-button");
 
         btnWorker.setOnAction(e -> pickFile(DataLoader.WORKER));
         btnCustomer.setOnAction(e -> pickFile(DataLoader.CUSTOMER));
         btnIceCream.setOnAction(e -> pickFile(DataLoader.ICECREAM));
         btnBack.setOnAction(e -> sm.setStage(StateManager.STATE_MENU));
+        btnReset.setOnAction(e -> reset());
 
 		btnWorker.setMinWidth(minButtonWidth);
 		btnWorker.setMinHeight(minButtonHeight);
@@ -89,11 +92,18 @@ public class FileState extends AppState {
 		btnIceCream.setMinHeight(minButtonHeight);
 		btnBack.setMinWidth(minButtonWidth);
 		btnBack.setMinHeight(minButtonHeight);
+        btnReset.setMinWidth(minButtonWidth);
+        btnReset.setMinHeight(minButtonHeight);
 
 		
-		pane.getChildren().addAll(btnWorker, btnCustomer, btnIceCream, btnBack);
+		pane.getChildren().addAll(btnWorker, btnCustomer, btnIceCream, btnReset, btnBack);
 
 	}
+
+    private void reset() {
+        dataLoader.resetPaths();
+        updateButtonText();
+    }
 
     private void updateButtonText() {
         String workerPath = dataLoader.getPath(DataLoader.WORKER);

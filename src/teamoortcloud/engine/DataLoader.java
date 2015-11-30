@@ -1,6 +1,6 @@
 package teamoortcloud.engine;
 
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import teamoortcloud.icecream.IceCream;
@@ -31,13 +31,16 @@ public class DataLoader {
         switch (type) {
             case WORKER:
                 workerPath = path;
+                break;
             case ICECREAM:
                 icecreamPath = path;
+                break;
             case CUSTOMER:
                 customerPath = path;
+                break;
         }
 
-        //Save new file
+        saveData();
     }
 
     private void loadPaths() {
@@ -66,17 +69,30 @@ public class DataLoader {
                 }
             }
 
-            System.out.println(customerPath + " : " + icecreamPath + " : " + workerPath);
-
         } catch(Exception e) {
-
+            resetPaths();
+            loadPaths();
         }
     }
 
-    private void resetPaths() {
+    public void resetPaths() {
         workerPath = DEFAULT_WORKER_PATH;
         customerPath = DEFAULT_CUSTOMER_PATH;
         icecreamPath = DEFAULT_ICECREAM_PATH;
+
+        saveData();
+    }
+
+    private void saveData() {
+        try {
+            PrintWriter writer = new PrintWriter(DEFAULT_PATH, "UTF-8");
+            writer.println("Worker," + workerPath);
+            writer.println("Customer," + customerPath);
+            writer.println("IceCream," + icecreamPath);
+            writer.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getPath(int type) {
@@ -95,7 +111,7 @@ public class DataLoader {
 
 	
 	//id, type, name, customers served, scoops served, amount earned, patience/stamina/none
-	public static ArrayList<Worker> getWorkers() {
+	public ArrayList<Worker> getWorkers() {
 		ArrayList<Worker> workers = new ArrayList<>();
 		
 		try {
@@ -103,6 +119,8 @@ public class DataLoader {
 			String line;
 			
 			while(fileReader.hasNextLine()) {
+
+
 				line = fileReader.nextLine();
 				String[] fields = line.split(",");
 				
@@ -136,46 +154,50 @@ public class DataLoader {
 			fileReader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+            resetPaths();
+            loadPaths();
 		}
 		
 		return workers;
 	}
 	
-        public static ArrayList<Customer> getCustomers() {
-            ArrayList<Customer> customer = new ArrayList<>();
-            try {
-			Scanner fileReader = new Scanner(new FileReader(getFilePass(CUSTOMER)));
-			String line;
-			
-			while(fileReader.hasNextLine()) {
-				line = fileReader.nextLine();
-				String[] fields = line.split(",");
-                                long id = Long.parseLong(fields[0].trim());
-				String name = fields[1].trim();
-				double wallet= Double.parseDouble(fields[2].trim());
-				int happiness = Integer.parseInt(fields[3].trim());
-				int pennies= Integer.parseInt(fields[4].trim());
-                                int nickles= Integer.parseInt(fields[5].trim());
-                                int dimes= Integer.parseInt(fields[6].trim());
-                                int quarters= Integer.parseInt(fields[7].trim());
-                                int dollar1= Integer.parseInt(fields[8].trim());
-                                int dollar5= Integer.parseInt(fields[9].trim());
-                                int dollar10= Integer.parseInt(fields[10].trim());
-                                int dollar20= Integer.parseInt(fields[11].trim());
-                                
-                                customer.add(new Customer(id, name, wallet, happiness, pennies, nickles, 
-                                        dimes, quarters, dollar1, dollar5, dollar10, dollar20));
-                        } 
-			fileReader.close();
-            }                    
+    public ArrayList<Customer> getCustomers() {
+        ArrayList<Customer> customer = new ArrayList<>();
+        try {
+        Scanner fileReader = new Scanner(new FileReader(getFilePass(CUSTOMER)));
+        String line;
+
+        while(fileReader.hasNextLine()) {
+            line = fileReader.nextLine();
+            String[] fields = line.split(",");
+                            long id = Long.parseLong(fields[0].trim());
+            String name = fields[1].trim();
+            double wallet= Double.parseDouble(fields[2].trim());
+            int happiness = Integer.parseInt(fields[3].trim());
+            int pennies= Integer.parseInt(fields[4].trim());
+                            int nickles= Integer.parseInt(fields[5].trim());
+                            int dimes= Integer.parseInt(fields[6].trim());
+                            int quarters= Integer.parseInt(fields[7].trim());
+                            int dollar1= Integer.parseInt(fields[8].trim());
+                            int dollar5= Integer.parseInt(fields[9].trim());
+                            int dollar10= Integer.parseInt(fields[10].trim());
+                            int dollar20= Integer.parseInt(fields[11].trim());
+
+                            customer.add(new Customer(id, name, wallet, happiness, pennies, nickles,
+                                    dimes, quarters, dollar1, dollar5, dollar10, dollar20));
+                    }
+            fileReader.close();
+            }
             catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return customer;
+            e.printStackTrace();
+            resetPaths();
+            loadPaths();
+        }
+
+        return customer;
 	}                    
                                 
-        public static ArrayList<IceCream> getIceCream() {
+        public ArrayList<IceCream> getIceCream() {
             ArrayList<IceCream> icecream = new ArrayList<>();
             try {
 			Scanner fileReader = new Scanner(new FileReader(getFilePass(ICECREAM)));
@@ -196,53 +218,22 @@ public class DataLoader {
             }                    
             catch (Exception e) {
 			e.printStackTrace();
+                resetPaths();
+                loadPaths();
 		}
 		
 		return icecream;
 	}
-        
-	/*private static String getFileName(int type) {
-		switch(type) {
-		case WORKER:
-			return "data/TestWorker.txt";
-		case CUSTOMER:
-			return "data/TestCustomer.txt";
-		case ICECREAM:
-			return "data/TestIceCream.txt";
-		default:
-			return null;
-		}
-	}*/
-	private static String getFilePass(int type)
+
+	private String getFilePass(int type)
 	{
-		String workerFile = "data/TestWorker.txt", customerFile = "data/TestCustomer.txt", iceCreamFile = "data/TestIceCream.txt";
-		try {
-			Scanner fileReader = new Scanner(new FileReader("data/filepaths.txt"));
-			String line;
-			
-			while(fileReader.hasNextLine()) {
-				line = fileReader.nextLine();
-				String[] fields = line.split(",");
-                String ftype = fields[0];
-                if(ftype=="Worker")
-                	workerFile= fields[1].trim();
-                if(ftype=="Customer")
-                	customerFile= fields[1].trim();
-                if(ftype=="IceCream")
-                	iceCreamFile= fields[1].trim();
-                }
-			fileReader.close();
-            }                    
-            catch (Exception e) {
-			e.printStackTrace();
-		}
 		switch(type) {
 		case WORKER:
-			return workerFile;
+			return workerPath;
 		case CUSTOMER:
-			return customerFile;
+			return customerPath;
 		case ICECREAM:
-			return iceCreamFile;
+			return icecreamPath;
 		default:
 			return null;
 		}

@@ -4,6 +4,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import teamoortcloud.entities.CustomerManager;
+import teamoortcloud.entities.FallingIceCream;
+import teamoortcloud.other.Shop;
+
+import java.util.Random;
 
 public class ShopSimulation {
 	
@@ -12,11 +16,17 @@ public class ShopSimulation {
 	public static final int TILE_SIZE = 16;
 	
 	int tiles[][];
-	
+
+    Shop shop;
 	CustomerManager customerManager;
-	Image bg;
+	Image bg, poopImage;
+
+    boolean crappyHour = false;
+
+    FallingIceCream poop[];
 	
-	public ShopSimulation() {
+	public ShopSimulation(Shop shop) {
+        this.shop = shop;
 		tiles = new int[TILE_HEIGHT][TILE_WIDTH];
 		
 		tiles[3][4] = 1;
@@ -26,7 +36,8 @@ public class ShopSimulation {
 		
 		customerManager = new CustomerManager();
 		bg = new Image("file:res/images/bg_shop.png");
-		
+		poopImage = new Image("file:res/images/poop.png");
+
 		//customer.travelTo(150, 300);
 		
 //		try {
@@ -60,6 +71,14 @@ public class ShopSimulation {
 		gc.drawImage(bg, 0, 0, TILE_WIDTH * TILE_SIZE, TILE_HEIGHT * TILE_SIZE);
 		customerManager.draw(gc);
 
+        if(crappyHour) {
+            for(int i = 0; i < 15; i++) {
+                FallingIceCream f = poop[i];
+                f.update();
+                f.draw(gc, poopImage);
+            }
+        }
+
 		for(int y = 0; y < TILE_HEIGHT; y++) {
 			for(int x = 0; x < TILE_WIDTH; x++) {
 				Color c = Color.BLACK;
@@ -88,4 +107,19 @@ public class ShopSimulation {
 			}
 		}
 	}
+
+    public void startCrappyHour() {
+        Random rand = new Random();
+        int maxX = TILE_WIDTH * TILE_SIZE - (int)poopImage.getWidth();
+        int maxY = TILE_HEIGHT * TILE_SIZE - (int)poopImage.getHeight();
+        int maxEntities = 15;
+
+        poop = new FallingIceCream[maxEntities];
+
+        for(int i = 0; i < maxEntities; i++) {
+            poop[i] =  new FallingIceCream(rand, maxX, maxY, (int)poopImage.getHeight());
+        }
+
+        crappyHour = true;
+    }
 }

@@ -1,6 +1,7 @@
 package teamoortcloud.other;
 
 import teamoortcloud.engine.DataLoader;
+import teamoortcloud.engine.ShopLog;
 import teamoortcloud.icecream.IceCream;
 import teamoortcloud.people.Cashier;
 import teamoortcloud.people.Customer;
@@ -26,18 +27,26 @@ public class Shop {
 
     Stocker activeStocker;
     Cashier activeCashier;
+    ShopLog log;
 
     CashRegister register;
 
     private ShopDataChangedListener listener;
 
     public Shop() {
-        employees = DataLoader.getWorkers();
-        customers = DataLoader.getCustomers();
-        icecream = DataLoader.getIceCream();
+
+        DataLoader dl = new DataLoader();
+        employees = dl.getWorkers();
+        customers = dl.getCustomers();
+        icecream = dl.getIceCream();
 
         orders = new ArrayList<>();
         register = new CashRegister();
+        log = new ShopLog();
+    }
+
+    public ShopLog getLog() {
+        return log;
     }
 
     public void setListener(ShopDataChangedListener listener) {
