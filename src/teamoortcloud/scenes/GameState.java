@@ -1,18 +1,20 @@
 package teamoortcloud.scenes;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -46,7 +48,19 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 		game = new ShopSimulation(shop);
         gameClock = new GameClock();
 
-        gameClock.setListener(() -> game.startCrappyHour());
+        gameClock.setListener(new GameClock.GameClockListener() {
+            @Override
+            public void crappyHourBegins() {
+                game.startCrappyHour();
+                Platform.runLater(() -> shop.getLog().addLog("The chaos has begun.."));
+            }
+
+            @Override
+            public void shopClosed() {
+
+                Platform.runLater(() -> endGame());
+            }
+        });
 
         //Check if game closed
         sm.getStage().setOnCloseRequest(e -> stageClosed());
@@ -59,7 +73,9 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 		//Setup basic panes + contents
 		BorderPane rootPane = new BorderPane();
 		rootPane.setStyle("-fx-background-color: #474F53;");
-        rootPane.setTop(new VBox(initToolBar(), initStatusBar()));
+
+        rootPane.setTop(new VBox(initMenu(), initStatusBar()));
+
         rootPane.setBottom(initGame());
 		
 		startGame();
@@ -82,54 +98,39 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
         return pane;
     }
 
-	private BorderPane initToolBar() {
-		BorderPane pane = new BorderPane();
-		HBox leftPane = new HBox();
-		HBox rightPane = new HBox();
+    private MenuBar initMenu() {
+        MenuBar bar = new MenuBar();
+        bar.setPadding(new Insets(5));
+        bar.setStyle("-fx-background-color: #3C4346;");
 
-		final int PANE_SPACING = 15;
-		final int PANE_PADDING = 10;
+        Menu menuTasks = new Menu("Tasks");
+        Menu menuPeople = new Menu("People");
+        Menu menuShop = new Menu("Shop");
 
-		leftPane.setSpacing(PANE_SPACING);
-		leftPane.setPadding(new Insets(PANE_PADDING));
-		pane.setStyle("-fx-background-color: #3C4346;");
+        MenuItem itemCashRegister = new MenuItem("Cash Register");
+        MenuItem itemStocker = new MenuItem("Stocker");
+        itemCashRegister.setOnAction(e -> checkoutWindow());
+        itemStocker.setOnAction(e -> stockerWindow());
 
-		rightPane.setSpacing(PANE_SPACING);
-		rightPane.setPadding(new Insets(PANE_PADDING));
+        MenuItem itemEmployees = new MenuItem("Employees");
+        MenuItem itemCustomers = new MenuItem("Customers");
+        itemEmployees.setOnAction(e -> employeesWindow());
+        itemCustomers.setOnAction(e -> customerWindow());
 
-		//Left ToolBar
-		Button btnCashier, btnStocker, btnManager, btnCustomers;
-		btnCashier = new Button("Cashier");
-		btnStocker = new Button("Stocker");
-		btnManager = new Button("Employees");
-		btnCustomers = new Button("Customers");
+        MenuItem itemOverview = new MenuItem("Shop Overview");
+        MenuItem itemEnd = new MenuItem("End Game");
+        itemOverview.setOnAction(e -> shopoverviewWindow());
+        itemEnd.setOnAction(e -> endGame());
 
-		btnCashier.getStyleClass().add("menu-button");
-		btnStocker.getStyleClass().add("menu-button");
-		btnManager.getStyleClass().add("menu-button");
-		btnCustomers.getStyleClass().add("menu-button");
+        menuTasks.getItems().addAll(itemCashRegister, itemStocker);
+        menuPeople.getItems().addAll(itemEmployees, itemCustomers);
+        menuShop.getItems().addAll(itemOverview, itemEnd);
 
-		btnManager.setOnAction(e -> employeesWindow());
-		btnStocker.setOnAction(e -> stockerWindow());
-		btnCashier.setOnAction(e -> checkoutWindow());
-		btnCustomers.setOnAction(e -> customerWindow());
 
-		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnCustomers);
+        bar.getMenus().addAll(menuTasks, menuPeople, menuShop);
 
-		//right ToolBar
-		Button btnStats = new Button("Shop Overview");
-        btnStats.setOnAction(e -> statsWindow());
-		btnStats.getStyleClass().add("menu-button");
-		btnCustomers.getStyleClass().add("menu-button");
-		rightPane.getChildren().addAll(btnStats);
-
-		btnStats.setOnAction(e -> shopoverviewWindow());
-		
-		pane.setLeft(leftPane);
-		pane.setRight(rightPane);
-
-		return pane;
-	}
+        return bar;
+    }
 	
 	private Group initGame() {
 		Group pane = new Group();
@@ -282,6 +283,17 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
         //Status
         updateStatus();
 	}
+
+    private void endGame() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText("That's it, you failed");
+        alert.setContentText("Score: -1");
+
+        alert.setOnCloseRequest(e -> sm.setStage(StateManager.STATE_MENU));
+
+        alert.showAndWait();
+    }
 
     private void showError(String error) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

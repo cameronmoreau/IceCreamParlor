@@ -64,8 +64,11 @@ public class StockerState extends AppState {
 			public void changed(ObservableValue<? extends String> list,
 					String previousValue, String value) {
 				
-				selectedIceCream = icecream.get(icecreamList.getSelectionModel().getSelectedIndex());
-				updateSelectedIceCream();
+				int index = icecreamList.getSelectionModel().getSelectedIndex();
+				if(index != -1) {
+					selectedIceCream = icecream.get(index);
+					updateSelectedIceCream();
+				}
 			}
 			
 		});

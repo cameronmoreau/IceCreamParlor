@@ -10,6 +10,7 @@ public class GameClock {
 
     public interface GameClockListener {
         void crappyHourBegins();
+        void shopClosed();
     }
 
     final int clockStart = 1;
@@ -40,6 +41,7 @@ public class GameClock {
                 tickClock();
 
                 if(currentHour == clockEnd) {
+                    if(listener != null) listener.shopClosed();
                     this.cancel();
                 }
             }
