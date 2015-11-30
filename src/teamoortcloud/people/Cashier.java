@@ -25,6 +25,10 @@ public class Cashier extends Worker {
 		super(id, name);
 	}
 
+    public void toggleBreak() { this.onBreak = !this.onBreak; }
+
+	public boolean getOnBreak() { return this.onBreak; }
+
 	@Override
 	public StringProperty onBreakProperty() {
 		return new SimpleStringProperty(String.valueOf(onBreak));

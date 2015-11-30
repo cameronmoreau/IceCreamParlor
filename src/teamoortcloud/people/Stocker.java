@@ -29,15 +29,9 @@ public class Stocker extends Worker {
 		return new SimpleStringProperty(String.valueOf(onBreak));
 	}
 	
-	public void goOnBreak()
-	{
-		onBreak=true;
-	}
-	
-	public void leaveBreak()
-	{
-		onBreak=false;
-	}
+	public void toggleBreak() { this.onBreak = !this.onBreak; }
+
+	public boolean getOnBreak() { return this.onBreak; }
 	
 	public int getStamina()
 	{

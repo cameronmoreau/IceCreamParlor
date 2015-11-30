@@ -33,7 +33,7 @@ public class EmployeeManagerState extends AppState {
 	
 	Label labelSelectedEmployee;
 	ComboBox<String> comboSelectedType, comboWorkerType;
-	Button btnAddWorker, btnUpdateWorker;
+	Button btnAddWorker, btnUpdateWorker, btnSetActive;
 	TextField tfWorkerName;
 	ListView<String> employeeList;
 	
@@ -69,9 +69,12 @@ public class EmployeeManagerState extends AppState {
 			@Override
 			public void changed(ObservableValue<? extends String> list,
 					String previousValue, String value) {
-				
-				selectedEmployee = shop.getEmployees().get(employeeList.getSelectionModel().getSelectedIndex());
-				updateSelectedEmployee();
+
+                int index = employeeList.getSelectionModel().getSelectedIndex();
+                if(index != -1) {
+                    selectedEmployee = shop.getEmployees().get(employeeList.getSelectionModel().getSelectedIndex());
+                    updateSelectedEmployee();
+                }
 			}
 			
 		});
@@ -127,9 +130,15 @@ public class EmployeeManagerState extends AppState {
 		
 		comboSelectedType = new ComboBox<>(FXCollections.observableArrayList(WORKER_TYPES));
 		btnUpdateWorker = new Button("Update");
-		btnUpdateWorker.setDisable(true);
+		btnSetActive = new Button("Set Active");
 		labelSelectedEmployee = new Label("Nothing selected...");
-		
+
+		btnUpdateWorker.setDisable(true);
+        btnSetActive.setDisable(true);
+
+        btnUpdateWorker.setOnAction(e -> updateWorker());
+        btnSetActive.setOnAction(e -> setActiveWorker());
+
 		comboSelectedType.valueProperty().addListener(new ChangeListener<String>() {
 
 			@Override
@@ -144,7 +153,7 @@ public class EmployeeManagerState extends AppState {
 		});
 		
 		updatePane.getChildren().addAll(comboSelectedType, btnUpdateWorker);
-		bottomPane.getChildren().addAll(labelSelectedEmployee, updatePane);
+		bottomPane.getChildren().addAll(labelSelectedEmployee, updatePane, btnSetActive);
 		
 		pane.setTop(topPane);
 		pane.setBottom(bottomPane);
@@ -154,6 +163,11 @@ public class EmployeeManagerState extends AppState {
 	//Helper functions
 	private void updateSelectedEmployee() {
 		btnUpdateWorker.setDisable(true);
+
+        //Active + break
+        if(selectedEmployee.getClass() == Worker.class) btnSetActive.setDisable(true);
+        else btnSetActive.setDisable(false);
+
 		labelSelectedEmployee.setText(String.format(
 			"NAME: %s\nCUSTOMERS SERVED: %d\nSCOOPS SERVED: %d\nMONEY TAKEN: %s",
 			selectedEmployee.getName(), selectedEmployee.getCustomersServed(), selectedEmployee.getScoopsServed(),
@@ -200,10 +214,36 @@ public class EmployeeManagerState extends AppState {
 		
 		return true;
 	}
-	
+
+    private void updateWorker() {
+
+    }
+
+    private void setActiveWorker() {
+        if(selectedEmployee.getClass() == Stocker.class) {
+            if(shop.getActiveStocker() != null) shop.getActiveStocker().toggleBreak();
+
+            shop.setActiveStocker((Stocker)selectedEmployee);
+            ((Stocker)selectedEmployee).toggleBreak();
+        }
+        else if(selectedEmployee.getClass() == Cashier.class) {
+            if(shop.getActiveCashier() != null) shop.getActiveCashier().toggleBreak();
+
+            shop.setActiveCashier((Cashier)selectedEmployee);
+            ((Cashier)selectedEmployee).toggleBreak();
+        }
+
+        employeeList.setItems(getEmployeesListData());
+    }
+
 	private ObservableList<String> getEmployeesListData() {
 		ObservableList<String> array = FXCollections.observableArrayList();
-		for(Worker w : shop.getEmployees()) array.add(w.getName() + ": " + w.getType());
+		for(Worker w : shop.getEmployees()) {
+            String s = w.getName() + ": " + w.getType();
+            if(shop.getActiveStocker() == w) s += " (Active Stocker)";
+            else if(shop.getActiveCashier() == w) s += " (Active Cashier)";
+            array.add(s);
+        }
 		return array;
 	}
 }
