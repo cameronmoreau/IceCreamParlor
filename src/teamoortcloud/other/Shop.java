@@ -32,9 +32,11 @@ public class Shop {
     private ShopDataChangedListener listener;
 
     public Shop() {
-        employees = DataLoader.getWorkers();
-        customers = DataLoader.getCustomers();
-        icecream = DataLoader.getIceCream();
+
+        DataLoader dl = new DataLoader();
+        employees = dl.getWorkers();
+        customers = dl.getCustomers();
+        icecream = dl.getIceCream();
 
         orders = new ArrayList<>();
         register = new CashRegister();
