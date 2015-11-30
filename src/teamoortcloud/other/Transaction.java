@@ -18,4 +18,36 @@ public class Transaction {
                 twenties*20;
     }
     
+    public int getPennies()
+    {
+    	return pennies;
+    }
+    public int getNickels()
+    {
+    	return nickels;
+    }
+    public int getDimes()
+    {
+    	return dimes;
+    }
+    public int getQuarters()
+    {
+    	return quarters;
+    }
+    public int getOnes()
+    {
+    	return ones;
+    }
+    public int getFives()
+    {
+    	return fives;
+    }
+    public int getTens()
+    {
+    	return tens;
+    }
+    public int getTwenties()
+    {
+    	return twenties;
+    }
 }

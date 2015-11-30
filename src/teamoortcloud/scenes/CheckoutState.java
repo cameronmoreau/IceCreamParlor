@@ -93,7 +93,7 @@ public class CheckoutState extends AppState {
 	}
 
     private void checkoutWithCash() {
-        this.sm.setScene(new CheckoutCashState(this.sm).scene);
+        this.sm.setScene(new CheckoutCashState(this.sm, order, shop).scene);
     }
 
     private void checkoutWithCredit() {

@@ -24,6 +24,7 @@ public class StockerState extends AppState {
 	ArrayList<IceCream> icecream;
 	IceCream selectedIceCream;
 	Stocker stocker;
+	Label labelWorker;
 	
 	Button btnUpdateIceCream,btnBreak,btnReturn;
 	
@@ -54,7 +55,7 @@ public class StockerState extends AppState {
 		stockerPane.setSpacing(5);
 		stockerPane.setPadding(new Insets(0, 5, 5, 5));
 		
-		Label labelWorker = new Label("Current Stocker: " + "\tStamina: 18");// + stocker.getStamina());
+		labelWorker = new Label("Current Stocker: " +stocker.getName()+ "\tStamina: " + stocker.getStamina());// + stocker.getStamina());
 		
 		icecreamList = new ListView<>();
 		icecreamList.setItems(getIceCreamListData());
@@ -64,8 +65,11 @@ public class StockerState extends AppState {
 			public void changed(ObservableValue<? extends String> list,
 					String previousValue, String value) {
 				
-				selectedIceCream = icecream.get(icecreamList.getSelectionModel().getSelectedIndex());
-				updateSelectedIceCream();
+				int index = icecreamList.getSelectionModel().getSelectedIndex();
+				if(index != -1) {
+					selectedIceCream = icecream.get(index);
+					updateSelectedIceCream();
+				}
 			}
 			
 		});
@@ -90,7 +94,10 @@ public class StockerState extends AppState {
 	private void stockIceCream() 
 	{
 		selectedIceCream.setScoops(80);
+		icecreamList.setItems(getIceCreamListData());
 		stocker.changeStamina(-1);
+		labelWorker.setText("Current Stocker: " +stocker.getName()+ "\tStamina: " + stocker.getStamina());
+		shop.setDataChanged();
 	}
 	
 	private void goOnBreak()
