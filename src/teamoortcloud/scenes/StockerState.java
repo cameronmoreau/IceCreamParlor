@@ -90,7 +90,9 @@ public class StockerState extends AppState {
 	private void stockIceCream() 
 	{
 		selectedIceCream.setScoops(80);
+		icecreamList.setItems(getIceCreamListData());
 		stocker.changeStamina(-1);
+		shop.setDataChanged();
 	}
 	
 	private void goOnBreak()
