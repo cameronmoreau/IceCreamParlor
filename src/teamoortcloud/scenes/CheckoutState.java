@@ -84,7 +84,7 @@ public class CheckoutState extends AppState {
 		//Bottom buttons
 		Button btnRemoveItem = new Button("Remove Item");
 		Button btnCheckoutCredit = new Button("Checkout with Credit");
-		Button btnCheckoutCash = new Button("Checkout with Cash  ");
+		Button btnCheckoutCash = new Button("Checkout with Cash");
 
 		btnRemoveItem.setOnAction(e -> removeFromOrder());
 		btnCheckoutCredit.setOnAction(e -> checkoutWithCredit());
@@ -100,6 +100,7 @@ public class CheckoutState extends AppState {
 	}
 
     private void checkoutWithCash() {
+        this.sm.setScene(new CheckoutCashState(this.sm).scene);
     }
 
     private void checkoutWithCredit() {

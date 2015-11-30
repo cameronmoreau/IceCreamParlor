@@ -10,7 +10,7 @@ public class CheckoutCreditState extends AppState {
         super(sm);
 
         VBox rootPane = new VBox();
-        rootPane.getChildren().addAll(new Label("test"));
+        rootPane.getChildren().addAll(new Label("Checkout with Credit"));
 
         this.scene = new Scene(rootPane);
     }
