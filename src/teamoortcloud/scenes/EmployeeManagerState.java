@@ -153,7 +153,7 @@ public class EmployeeManagerState extends AppState {
         if(selectedEmployee.getClass() == Stocker.class)
             text += "\nSTAMINA: " + ((Stocker)selectedEmployee).getStamina();
         else if(selectedEmployee.getClass() == Cashier.class)
-            text += "\nSTAMINA: " + ((Cashier)selectedEmployee).getPatience();
+            text += "\nPatience: " + ((Cashier)selectedEmployee).getPatience();
 
 		labelSelectedEmployee.setText(text);
 	}

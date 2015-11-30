@@ -1,38 +1,33 @@
 package teamoortcloud.scenes;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Random;
-import java.util.Scanner;
-
-import javafx.animation.AnimationTimer;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import teamoortcloud.engine.App;
-import teamoortcloud.entities.FallingIceCream;
-import javax.swing.JFileChooser;
+import javafx.stage.FileChooser;
+import teamoortcloud.engine.DataLoader;
 
- 
+import java.io.File;
+
+
 public class FileState extends AppState {
 	
 	Button btnWorker, btnCustomer, btnIceCream, btnBack;
-	JFileChooser fc;
-	File fWorker, fCustomer, fIceCream;
+	FileChooser fileChooser;
+    File tempFile;
+    DataLoader dataLoader;
 
 	public FileState(StateManager sm) {
 		super(sm);
+
+        //Setup file chooser
+        fileChooser = new FileChooser();
+
+        dataLoader = new DataLoader();
 		
 		//Setup basic panes
 		StackPane rootPane = new StackPane();
@@ -42,11 +37,22 @@ public class FileState extends AppState {
 		rootPane.getChildren().addAll(canvasPane, pane);
 		
 		//Setup pane contents
-		initCanvas(canvasPane);
 		initFrame(pane);
 		
 		scene = new Scene(rootPane);
+        setupStyle();
 	}
+
+    private void pickFile(int type) {
+        fileChooser.setTitle("Select <> file");
+        tempFile = fileChooser.showOpenDialog(sm.getStage());
+
+        //File wasnt picked
+        if(tempFile == null) return;
+
+        dataLoader.setNewPath(type, tempFile.getPath());
+        updateButtonText();
+    }
 	
 	//setup menu frame
 	private void initFrame(VBox pane) {
@@ -59,8 +65,22 @@ public class FileState extends AppState {
 		btnWorker = new Button("Open Worker File");
 		btnCustomer = new Button("Open Customer File");
 		btnIceCream = new Button("Open Ice Cream File");
-		btnBack = new Button("Back");
-		
+
+        updateButtonText();
+
+        btnBack = new Button("Back");
+        btnBack.setPadding(new Insets(10, 0, 0, 0));
+
+        btnWorker.getStyleClass().add("menu-button");
+        btnCustomer.getStyleClass().add("menu-button");
+        btnIceCream.getStyleClass().add("menu-button");
+        btnBack.getStyleClass().add("menu-button");
+
+        btnWorker.setOnAction(e -> pickFile(DataLoader.WORKER));
+        btnCustomer.setOnAction(e -> pickFile(DataLoader.CUSTOMER));
+        btnIceCream.setOnAction(e -> pickFile(DataLoader.ICECREAM));
+        btnBack.setOnAction(e -> sm.setStage(StateManager.STATE_MENU));
+
 		btnWorker.setMinWidth(minButtonWidth);
 		btnWorker.setMinHeight(minButtonHeight);
 		btnCustomer.setMinWidth(minButtonWidth);
@@ -71,103 +91,23 @@ public class FileState extends AppState {
 		btnBack.setMinHeight(minButtonHeight);
 
 		
-		btnWorker.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	JFileChooser fileChooser = new JFileChooser();
-		          int returnValue = fileChooser.showOpenDialog(null);
-		          if (returnValue == JFileChooser.APPROVE_OPTION) {
-		            fWorker = fileChooser.getSelectedFile();
-					try {
-						Scanner fileReader = new Scanner(new FileReader("data/FileNames.txt"));
-					String[] line = new String[3];
-					int linenum = 0;
-					while(fileReader.hasNextLine()) 
-					{
-						line[linenum] = fileReader.nextLine();
-		            }
-					fileReader.close();
-					String[] original = line[0].split(",");
-					String[] change = line[0].split(",");
-					change[1]=fWorker.getName();
-					line[0].replace(original[1],change[1]);
-					FileWriter fw = new FileWriter("data/FileNames.txt");
-					for(int i=0;i<3;i++)
-						fw.write(line[i]);
-					fw.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-            }
-        }});
-		
-		btnCustomer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	JFileChooser fileChooser = new JFileChooser();
-		          int returnValue = fileChooser.showOpenDialog(null);
-		          if (returnValue == JFileChooser.APPROVE_OPTION) {
-		            fCustomer = fileChooser.getSelectedFile();
-		            System.out.println(fCustomer.getName());
-            }
-        }});
+		pane.getChildren().addAll(btnWorker, btnCustomer, btnIceCream, btnBack);
 
-		btnIceCream.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	JFileChooser fileChooser = new JFileChooser();
-		          int returnValue = fileChooser.showOpenDialog(null);
-		          if (returnValue == JFileChooser.APPROVE_OPTION) {
-		        	fIceCream = fileChooser.getSelectedFile();
-		            System.out.println(fIceCream.getName());
-            }
-        }});
-
-		btnBack.setOnAction(e -> sm.setStage(StateManager.STATE_MENU));
-		
-		pane.getChildren().addAll(btnWorker, btnCustomer, btnIceCream, btnBack);	
 	}
-	
-	private void initCanvas(Group canvasPane) {
-		//Setup canvas and graphics
-		Canvas canvas = new Canvas(App.SCREEN_WIDTH, App.SCREEN_HEIGHT);
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-		
-		//Load images
-		Image iceCreamImage = new Image("file:res/images/icecream_cone_happy.png");
-		Image bg = new Image("file:res/images/menu_bg.jpg");
-		
-		//Generate falling ice cream
-		Random rand = new Random();
-		int maxX = (int)canvas.getWidth() - (int)iceCreamImage.getWidth();
-		int maxY = (int)canvas.getHeight() - (int)iceCreamImage.getHeight();
-		int maxEntities = 15;
-		
-		FallingIceCream falling[] = new FallingIceCream[maxEntities];
-		
-		for(int i = 0; i < maxEntities; i++) {
-			falling[i] =  new FallingIceCream(rand, maxX, maxY, (int)iceCreamImage.getHeight());
-		}
-		
-		//Animation timer for falling effect
-		new AnimationTimer() {
 
-			@Override
-			public void handle(long now) {
-				gc.drawImage(bg, 0, 0, canvas.getWidth(), canvas.getHeight());
-				
-				for(int i = 0; i < maxEntities; i++) {
-					FallingIceCream f = falling[i];
-					f.update();
-					f.draw(gc, iceCreamImage);
-				}
-			}
-			
-			
-		}.start();
-		
-		canvasPane.getChildren().add(canvas);
-	}
+    private void updateButtonText() {
+        String workerPath = dataLoader.getPath(DataLoader.WORKER);
+        if(workerPath.equals(DataLoader.DEFAULT_WORKER_PATH)) workerPath = "Default";
+
+        String customerPath = dataLoader.getPath(DataLoader.CUSTOMER);
+        if(customerPath.equals(DataLoader.DEFAULT_CUSTOMER_PATH)) customerPath = "Default";
+
+        String icecreamPath = dataLoader.getPath(DataLoader.ICECREAM);
+        if(icecreamPath.equals(DataLoader.DEFAULT_ICECREAM_PATH)) icecreamPath = "Default";
+
+        btnWorker.setText("Choose Worker File:\n" + workerPath);
+        btnCustomer.setText("Choose Customer File:\n" + customerPath);
+        btnIceCream.setText("Choose Ice Cream File:\n" + icecreamPath);
+    }
 	
 }

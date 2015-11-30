@@ -65,7 +65,6 @@ public class MenuState extends AppState {
         btnSettings.getStyleClass().add("menu-button");
 		
 		btnStart.setOnAction(e -> sm.setStage(StateManager.STATE_GAME));
-		//btnHighScore.setOnAction(e -> buttonClicked(e));
 		btnAbout.setOnAction(e -> sm.setStage(StateManager.STATE_ABOUT));
         btnSettings.setOnAction(e -> sm.setStage(StateManager.STATE_FILE));
 		

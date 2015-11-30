@@ -12,9 +12,86 @@ import teamoortcloud.people.Worker;
 
 public class DataLoader {
 	
-	private static final int WORKER = 0;
-	private static final int CUSTOMER = 1;
-	private static final int ICECREAM = 2;
+	public static final int WORKER = 0;
+    public static final int CUSTOMER = 1;
+    public static final int ICECREAM = 2;
+
+	public static final String DEFAULT_WORKER_PATH = "data/TestWorker.txt";
+	public static final String DEFAULT_CUSTOMER_PATH = "data/TestCustomer.txt";
+	public static final String DEFAULT_ICECREAM_PATH = "data/TestIceCream.txt";
+    public static final String DEFAULT_PATH = "data/filepaths.txt";
+
+	String workerPath, customerPath, icecreamPath;
+
+	public DataLoader() {
+        loadPaths();
+	}
+
+    public void setNewPath(int type, String path) {
+        switch (type) {
+            case WORKER:
+                workerPath = path;
+            case ICECREAM:
+                icecreamPath = path;
+            case CUSTOMER:
+                customerPath = path;
+        }
+
+        //Save new file
+    }
+
+    private void loadPaths() {
+
+        try {
+            Scanner fileReader = new Scanner(new FileReader(DEFAULT_PATH));
+            String line;
+
+            while(fileReader.hasNextLine()) {
+                line = fileReader.nextLine();
+                String[] fields = line.split(",");
+
+                switch (fields[0]) {
+                    case "Worker":
+                        workerPath = fields[1].trim();
+                        break;
+                    case "Customer":
+                        customerPath = fields[1].trim();
+                        break;
+                    case "IceCream":
+                        icecreamPath = fields[1].trim();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            System.out.println(customerPath + " : " + icecreamPath + " : " + workerPath);
+
+        } catch(Exception e) {
+
+        }
+    }
+
+    private void resetPaths() {
+        workerPath = DEFAULT_WORKER_PATH;
+        customerPath = DEFAULT_CUSTOMER_PATH;
+        icecreamPath = DEFAULT_ICECREAM_PATH;
+    }
+
+    public String getPath(int type) {
+        switch (type) {
+            case WORKER:
+                return workerPath;
+            case ICECREAM:
+                return icecreamPath;
+            case CUSTOMER:
+                return customerPath;
+
+            default:
+                return null;
+        }
+    }
 
 	
 	//id, type, name, customers served, scoops served, amount earned, patience/stamina/none
@@ -140,7 +217,7 @@ public class DataLoader {
 	{
 		String workerFile = "data/TestWorker.txt", customerFile = "data/TestCustomer.txt", iceCreamFile = "data/TestIceCream.txt";
 		try {
-			Scanner fileReader = new Scanner(new FileReader("data/FileNames.txt"));
+			Scanner fileReader = new Scanner(new FileReader("data/filepaths.txt"));
 			String line;
 			
 			while(fileReader.hasNextLine()) {
