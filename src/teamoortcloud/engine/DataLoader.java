@@ -119,6 +119,8 @@ public class DataLoader {
 			String line;
 			
 			while(fileReader.hasNextLine()) {
+
+
 				line = fileReader.nextLine();
 				String[] fields = line.split(",");
 				
@@ -222,28 +224,16 @@ public class DataLoader {
 		
 		return icecream;
 	}
-        
-	/*private static String getFileName(int type) {
-		switch(type) {
-		case WORKER:
-			return "data/TestWorker.txt";
-		case CUSTOMER:
-			return "data/TestCustomer.txt";
-		case ICECREAM:
-			return "data/TestIceCream.txt";
-		default:
-			return null;
-		}
-	}*/
+
 	private String getFilePass(int type)
 	{
 		switch(type) {
 		case WORKER:
 			return workerPath;
 		case CUSTOMER:
-			return workerPath;
+			return customerPath;
 		case ICECREAM:
-			return workerPath;
+			return icecreamPath;
 		default:
 			return null;
 		}

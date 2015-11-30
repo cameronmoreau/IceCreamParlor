@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import teamoortcloud.engine.GameClock;
 import teamoortcloud.engine.ShopLog;
 import teamoortcloud.engine.ShopSimulation;
 import teamoortcloud.other.Shop;
@@ -30,16 +31,24 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 	Shop shop;
     
 	ShopSimulation game;
+    GameClock gameClock;
+
     ShopLog log;
     Label statusLabel;
     NumberFormat moneyFormat;
 	
 	StateManager subManager;
+
+    private static final boolean debug = true;
 	
 	public GameState(StateManager sm) {
 		super(sm);
 		shop = new Shop();
 		game = new ShopSimulation();
+        gameClock = new GameClock();
+
+        //Check if game closed
+        sm.getStage().setOnCloseRequest(e -> stageClosed());
 
         statusLabel = new Label();
         shop.setListener(this);
@@ -148,8 +157,14 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 				game.update();
 				game.draw(gc);
 				
-				drawDebug(gc, mouseLoc);
-				
+				if(debug) drawDebug(gc, mouseLoc);
+
+                //Draw Clock
+                gc.setFill(Color.web("rgba(0, 0, 0, 0.5)"));
+                gc.fillRoundRect(5, 5, 60, 20, 8, 8);
+
+                gc.setFill(Color.WHITE);
+                gc.fillText(gameClock.getClockString(), 10, 20);
 			}
 			
 		}.start();
@@ -166,7 +181,7 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 				"\nMX: %d MY: %d \nTileX: %d TileY: %d", 
 				(int)mouse.getX(), (int)mouse.getY(),
 				(int)mouse.getX() / 16, (int)mouse.getY() / 16
-		), 0, 0);
+		), 0, 50);
 	}
 
     private void updateStatus() {
@@ -235,6 +250,9 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 	}
 	
 	private void startGame() {
+        //Start clock
+        gameClock.start();
+
 		//Queue customers
         for(Customer c : shop.getCustomers()) log.addLog(c.getName() + " enters the building");
 
@@ -268,6 +286,10 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
         alert.setContentText(error);
 
         alert.showAndWait();
+    }
+
+    private void stageClosed() {
+        gameClock.stop();
     }
 
     @Override
