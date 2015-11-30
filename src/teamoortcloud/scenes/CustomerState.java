@@ -148,7 +148,7 @@ public class CustomerState extends AppState {
 
 		tfNewCustomerName = new TextField();
 		tfNewCustomerName.textProperty().addListener((observable, oldValue, newValue) -> {
-			updateNewForm();
+			updateNewNameForm();
 		});
 		tfNewCustomerMoney = new TextField(){
             @Override 
@@ -167,9 +167,9 @@ public class CustomerState extends AppState {
                 }
             }
         };
-		tfNewCustomerMoney.textProperty().addListener((observable, oldValue, newValue) -> {updateNewForm();});
+		tfNewCustomerMoney.textProperty().addListener((observable, oldValue, newValue) -> {updateNewMoneyForm();});
 		
-		bottomPane.getChildren().addAll(labelSelectedCustomer);
+		bottomPane.getChildren().addAll(labelSelectedCustomer,tfNewCustomerName,btnUpdateName,tfNewCustomerMoney,btnUpdateMoney);
 		
 		pane.setTop(topPane);
 		pane.setBottom(bottomPane);
@@ -182,8 +182,7 @@ public class CustomerState extends AppState {
 		labelSelectedCustomer.setText("NAME: "+selectedCustomer.getName()+
 				"\nMONEY: "+moneyFormat.format(selectedCustomer.getTotalMoney())+
 				"\nHAPPINESS: "+selectedCustomer.getHappiness());
-		btnUpdateName.setDisable(false);
-		btnUpdateMoney.setDisable(false);
+
 		
 	}
 	
@@ -191,14 +190,33 @@ public class CustomerState extends AppState {
 		btnAddCustomer.setDisable(!newFormIsValid());
 	}
 	
+	private void updateNewNameForm()
+	{
+		btnUpdateName.setDisable(tfNewCustomerName.getText().length()<1);
+	}
+	
+	private void updateNewMoneyForm()
+	{
+		if(tfNewCustomerMoney.getText()!=null)
+			btnUpdateMoney.setDisable(tfNewCustomerMoney.getText()==null);
+	}
+	
 	private void updateName()
 	{
-		
+		selectedCustomer.changeName(tfNewCustomerName.getText());
+		updateSelectedCustomer();
+		customerList.setItems(getCustomerListData());
+		btnUpdateName.setDisable(true);
+		tfNewCustomerName.clear();
 	}
 	
 	private void updateMoney()
 	{
-		
+		selectedCustomer.changeMoney(Double.parseDouble(tfNewCustomerMoney.getText()));
+		updateSelectedCustomer();
+		customerList.setItems(getCustomerListData());
+		btnUpdateMoney.setDisable(true);
+		tfNewCustomerMoney.clear();
 	}
 	
 	private void addNewCustomer() {
@@ -218,11 +236,12 @@ public class CustomerState extends AppState {
 	}
 	
 	private Boolean newFormIsValid() {
-		if(tfCustomerName.getText().length() < 1) return false;
-		if(Double.parseDouble(tfCustomerMoney.getText())>0) return false;
-		return true;
+		if(tfCustomerName.getText()!=null) return true;
+		if(tfCustomerMoney.getText()!=null)
+				if(Double.parseDouble(tfCustomerMoney.getText())>0) return true;
+		return false;
 	}
-
+	
 
     private void setActiveCustomer() {
         
@@ -232,7 +251,7 @@ public class CustomerState extends AppState {
 	private ObservableList<String> getCustomerListData() {
 		ObservableList<String> array = FXCollections.observableArrayList();
 		for(Customer c : shop.getCustomers()) {
-            String s = c.getName() + ": " + c.getTotalMoney();
+            String s = c.getName() + ": " + moneyFormat.format(c.getTotalMoney());
             array.add(s);
         }
 		return array;

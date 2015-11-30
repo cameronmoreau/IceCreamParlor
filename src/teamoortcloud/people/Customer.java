@@ -116,6 +116,17 @@ public class Customer {
 
         return name + " " + badActions[new Random().nextInt(badActions.length)] + " and leaves";
 	}
+    
+    public void changeName(String name)
+    {
+    	this.name = name;
+    }
+    
+    public void changeMoney(Double money)
+    {
+    	totalMoney = money;
+    	makeChange(money);
+    }
 
     public long getId() {
         return id;
