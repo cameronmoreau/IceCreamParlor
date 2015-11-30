@@ -114,6 +114,8 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 
         MenuItem itemEmployees = new MenuItem("Employees");
         MenuItem itemCustomers = new MenuItem("Customers");
+        MenuItem itemIceCream = new MenuItem("Ice Cream");
+        itemIceCream.setOnAction(e -> IceCreamWindow());
         itemEmployees.setOnAction(e -> employeesWindow());
         itemCustomers.setOnAction(e -> customerWindow());
 
@@ -122,7 +124,7 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
         itemOverview.setOnAction(e -> shopoverviewWindow());
         itemEnd.setOnAction(e -> endGame());
 
-        menuTasks.getItems().addAll(itemCashRegister, itemStocker);
+        menuTasks.getItems().addAll(itemCashRegister, itemStocker, itemIceCream);
         menuPeople.getItems().addAll(itemEmployees, itemCustomers);
         menuShop.getItems().addAll(itemOverview, itemEnd);
 
@@ -241,6 +243,11 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 	
 	private void customerWindow() {
         this.subManager.setScene(new CustomerState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
+	}
+	
+	private void IceCreamWindow() {
+        this.subManager.setScene(new IceCreamState(this.subManager, shop).scene);
         this.subManager.getStage().show();
 	}
 	

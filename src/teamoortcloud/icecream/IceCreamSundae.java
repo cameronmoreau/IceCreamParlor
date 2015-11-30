@@ -29,4 +29,8 @@ public class IceCreamSundae extends Serving {
 	public int getMaxExtras() {
 		return 1;
 	}
+	public void changeNuts(boolean doesit)
+	{
+		hasNuts=doesit;
+	}
 }

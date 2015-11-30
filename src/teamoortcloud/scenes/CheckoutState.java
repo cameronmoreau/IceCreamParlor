@@ -36,6 +36,7 @@ public class CheckoutState extends AppState {
 	ComboBox<String> comboExtras[];
 	ComboBox<String> comboCone;
 	
+	CheckBox nuts;
 	Button btnAddToOrder;
     Label labelTotal;
 
@@ -204,9 +205,10 @@ public class CheckoutState extends AppState {
                 
                 //Check Button for NUTS! 
                 
-                CheckBox nuts = new CheckBox();
+                nuts = new CheckBox();
                 nuts.setText("Nuts");
                 nuts.setSelected(false);
+                nuts.setDisable(true);
                 rightPane.getChildren().addAll(nuts);
                 
                 
@@ -224,21 +226,32 @@ public class CheckoutState extends AppState {
 		switch(selected) {
 		case "Cone":
 			tempServing = new IceCreamCone();
+			nuts.setDisable(true);
+			nuts.setSelected(false);
 			break;
 		case "Sundae":
 			tempServing = new IceCreamSundae();
+			nuts.setDisable(false);
 			break;
 		case "Split":
 			tempServing = new IceCreamBananaSplit();
+			nuts.setDisable(true);
+			nuts.setSelected(false);
 			break;
 		case "Float":
 			tempServing = new IceCreamRootBeerFloat();
+			nuts.setDisable(true);
+			nuts.setSelected(false);
 			break;
 		case "Soda":
 			tempServing = new IceCreamSoda();
+			nuts.setDisable(true);
+			nuts.setSelected(false);
 			break;
 		default:
 			tempServing = null;
+			nuts.setDisable(true);
+			nuts.setSelected(false);
 			break;
 		}
 		
@@ -270,7 +283,13 @@ public class CheckoutState extends AppState {
 	}
 	
 	private void addToOrder() {
-		order.addServing(tempServing);
+		if(tempServing instanceof IceCreamSundae)
+		{
+			((IceCreamSundae) tempServing).changeNuts(nuts.isSelected());
+			order.addServing(tempServing);
+		}
+		else
+			order.addServing(tempServing);
 		tempServing = null;
 		clearFields();
 		

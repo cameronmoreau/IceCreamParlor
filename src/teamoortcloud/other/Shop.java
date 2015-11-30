@@ -130,6 +130,10 @@ public class Shop {
     public void setRegister(CashRegister register) {
         this.register = register;
     }
+    
+    public void addIceCream(IceCream ic) {this.icecream.add(ic); }
+    
+    public void removeIceCream(int i) {this.icecream.remove(i); }
 
     public void addWorker(Worker w) { this.employees.add(w); }
 

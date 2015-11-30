@@ -19,6 +19,17 @@ public class IceCream {
                 
 	}
     
+    public IceCream(long id, String name, double price, String flavor)
+    {
+    	super();
+    	this.id=id;
+    	this.name=name;
+    	this.price=price;
+    	this.flavor=flavor;
+    	this.description="You don't get a description";
+    	this.scoops=80;
+    }
+    
     public long getId() {
 		return id;
 	}
