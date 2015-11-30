@@ -184,6 +184,11 @@ public class GameState extends AppState {
         this.subManager.getStage().show();
 	}
 	
+	private vod StockerWindow() {
+        this.subManager.setScene(new StockerState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
+	}
+	
 	private void startGame() {
 		//Queue customers
 		new Thread(new Runnable() {
