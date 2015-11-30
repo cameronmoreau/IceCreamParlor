@@ -1,50 +1,145 @@
 package teamoortcloud.people;
 
+import teamoortcloud.other.Transaction;
+
+import java.util.Random;
+
 public class Customer {
     long id;
     String name;
-    double wallet;
+    double totalMoney;
     int happiness;
-    int pennies, nickles, dimes, quarters, dollar1, dollar5, dollar10, dollar20; 
+    Transaction wallet;
     
-    public Customer(long id, String name, double wallet, int happiness, int pennies, int nickles,
+    public Customer(long id, String name, double totalMoney, int happiness, int pennies, int nickles,
                 int dimes, int quarters, int dollar1, int dollar5, int dollar10, int dollar20) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.wallet = wallet;
-		this.happiness = happiness;
-		this.pennies = pennies;
-                this.nickles = nickles;
-                this.dimes = dimes;
-                this.quarters = quarters;
-                this.dollar1 = dollar1;
-                this.dollar5 = dollar5;
-                this.dollar10 = dollar10;
-                this.dollar20 = dollar20;
-                
+		this.totalMoney = totalMoney;
+        this.happiness = happiness;
+
+        this.wallet = new Transaction();
+        this.wallet.pennies = pennies;
+        this.wallet.nickels = nickles;
+        this.wallet.dimes = dimes;
+        this.wallet.quarters = quarters;
+        this.wallet.ones = dollar1;
+        this.wallet.fives = dollar5;
+        this.wallet.tens = dollar10;
+        this.wallet.twenties = dollar20;
 	}
     
-    /**
-     *
-     * @return
-     */
+    public Customer(long id, String name, double totalMoney)
+    {
+    	this.id = id;
+    	this.name = name;
+    	this.totalMoney = totalMoney;
+    	happiness=0;
+    	wallet=
+    }
     
-    public int getHappiness()
-    {
-    	return happiness;
+    public Transaction makeChange(Transaction choosenWallet, double price) {
+        Transaction changeBack = new Transaction();
+
+        int priceChange = (int)((Math.ceil(price) - price) * 100);
+        int coinChange = (int)((Math.ceil(price) - price) * 100);
+        int dollarRemaining = (int)(Math.ceil(choosenWallet.getTotal()) - Math.ceil(price));
+        int remaining = priceChange - coinChange;
+
+        if(remaining != 0) dollarRemaining += 1;
+
+        //Get Change Back
+        changeBack.quarters = remaining / 25;
+        remaining = remaining % 25;
+
+        changeBack.dimes = remaining / 10;
+        remaining = remaining % 10;
+
+        changeBack.nickels = remaining / 5;
+        remaining = remaining % 5;
+
+        changeBack.pennies = remaining / 1;
+
+        //Get Dollars change back
+        changeBack.twenties = dollarRemaining / 20;
+        remaining = remaining % 20;
+
+        changeBack.tens = dollarRemaining / 10;
+        remaining = remaining % 10;
+
+        changeBack.fives = dollarRemaining / 5;
+        remaining = remaining % 5;
+
+        changeBack.ones = dollarRemaining / 1;
+
+        return changeBack;
     }
-    public String getName()
-    {
-    	return name;
+
+    //Make sure they have enough money
+    public boolean checkWallet(Transaction choosenWallet) {
+        Transaction newWallet = new Transaction();
+
+        newWallet.pennies = wallet.pennies - choosenWallet.pennies;
+        newWallet.nickels = wallet.nickels - choosenWallet.nickels;
+        newWallet.dimes = wallet.dimes - choosenWallet.dimes;
+        newWallet.quarters = wallet.quarters - choosenWallet.quarters;
+        newWallet.ones = wallet.ones - choosenWallet.ones;
+        newWallet.fives = wallet.fives - choosenWallet.fives;
+        newWallet.tens = wallet.tens - choosenWallet.tens;
+        newWallet.twenties = wallet.twenties - choosenWallet.twenties;
+
+        //Make sure customer has enough
+        if(newWallet.pennies < 0 || newWallet.nickels < 0 ||
+                newWallet.dimes < 0 || newWallet.quarters < 0 ||
+                newWallet.ones < 0 || newWallet.fives < 0 ||
+                newWallet.tens < 0 || newWallet.twenties < 0) return false;
+
+        return true;
     }
-    @Override
-    public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", wallet=" + wallet +
-                    ", happiness=" + happiness + ", pennies=" + pennies + 
-                    ", nickles=" + nickles + ", dimes=" + dimes + ", quarters=" + quarters +
-                    ", dollar1=" + dollar1 + ", dollar5=" + dollar5 + 
-                    ", dollar10=" + dollar10 + ", dollar20=" + dollar20 + "]\n";
+
+    public void takeMoney(Transaction change) {
+        wallet.pennies -= change.pennies;
+        wallet.nickels -= change.nickels;
+        wallet.dimes -= change.dimes;
+        wallet.quarters -= change.quarters;
+        wallet.ones -= change.ones;
+        wallet.fives -= change.fives;
+        wallet.tens -= change.tens;
+        wallet.twenties -= change.twenties;
+    }
+
+
+
+    public String pureDissapointment() {
+        String badActions[] = {
+                "begins flipping tables",
+                "rates the store 1 start on yelp",
+                "begins crying and pulling their hair out",
+                "sets fire to the shop",
+                "drives their car though the window"
+        };
+
+        return name + " " + badActions[new Random().nextInt(badActions.length)] + " and leaves";
 	}
-	
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getTotalMoney() {
+        return totalMoney;
+    }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public Transaction getWallet() {
+        return wallet;
+    }
 }

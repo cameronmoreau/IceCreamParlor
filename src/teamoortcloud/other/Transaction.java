@@ -17,5 +17,11 @@ public class Transaction {
                 ones + fives*5 + tens*10 +
                 twenties*20;
     }
+    
+    public void findBills(double money)
+    {
+    	CashRegister register = new CashRegister(money);
+    	Transaction temp = register.makeChange(choosenWallet, price)
+    }
 
 }
