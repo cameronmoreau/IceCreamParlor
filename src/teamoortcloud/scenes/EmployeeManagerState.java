@@ -1,27 +1,20 @@
 package teamoortcloud.scenes;
 
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import teamoortcloud.other.Shop;
 import teamoortcloud.people.Cashier;
 import teamoortcloud.people.Stocker;
 import teamoortcloud.people.Worker;
+
+import java.text.NumberFormat;
 
 public class EmployeeManagerState extends AppState {
 	
@@ -32,8 +25,8 @@ public class EmployeeManagerState extends AppState {
 	Worker selectedEmployee;
 	
 	Label labelSelectedEmployee;
-	ComboBox<String> comboSelectedType, comboWorkerType;
-	Button btnAddWorker, btnUpdateWorker, btnSetActive;
+	ComboBox<String> comboWorkerType;
+	Button btnAddWorker, btnSetActive, btnFireWorker;
 	TextField tfWorkerName;
 	ListView<String> employeeList;
 	
@@ -125,58 +118,44 @@ public class EmployeeManagerState extends AppState {
 		);
 		
 		//Bottom Pane
-		HBox updatePane = new HBox();
-		updatePane.setSpacing(5);
-		
-		comboSelectedType = new ComboBox<>(FXCollections.observableArrayList(WORKER_TYPES));
-		btnUpdateWorker = new Button("Update");
+
 		btnSetActive = new Button("Set Active");
+        btnFireWorker = new Button("Fire");
 		labelSelectedEmployee = new Label("Nothing selected...");
 
-		btnUpdateWorker.setDisable(true);
         btnSetActive.setDisable(true);
-
-        btnUpdateWorker.setOnAction(e -> updateWorker());
         btnSetActive.setOnAction(e -> setActiveWorker());
 
-		comboSelectedType.valueProperty().addListener(new ChangeListener<String>() {
+        btnFireWorker.setDisable(true);
+        btnFireWorker.setOnAction(e -> fireWorker());
 
-			@Override
-			public void changed(ObservableValue<? extends String> list,
-					String previousValue, String value) {
-				
-				//Check that user actually changed the value
-				if(selectedEmployee.getType() != value)
-					btnUpdateWorker.setDisable(false);
-			}
-			
-		});
-		
-		updatePane.getChildren().addAll(comboSelectedType, btnUpdateWorker);
-		bottomPane.getChildren().addAll(labelSelectedEmployee, updatePane, btnSetActive);
+		bottomPane.getChildren().addAll(labelSelectedEmployee, btnSetActive, btnFireWorker);
 		
 		pane.setTop(topPane);
 		pane.setBottom(bottomPane);
 		return pane;
 	}
-	
-	//Helper functions
+
+    //Helper functions
 	private void updateSelectedEmployee() {
-		btnUpdateWorker.setDisable(true);
+		btnFireWorker.setDisable(false);
 
         //Active + break
         if(selectedEmployee.getClass() == Worker.class) btnSetActive.setDisable(true);
         else btnSetActive.setDisable(false);
 
-		labelSelectedEmployee.setText(String.format(
-			"NAME: %s\nCUSTOMERS SERVED: %d\nSCOOPS SERVED: %d\nMONEY TAKEN: %s",
-			selectedEmployee.getName(), selectedEmployee.getCustomersServed(), selectedEmployee.getScoopsServed(),
-			moneyFormat.format(selectedEmployee.getMoneyTaken())
-		));
-		
-		//Set combo box
-		int index = Arrays.asList(WORKER_TYPES).indexOf(selectedEmployee.getType());
-		comboSelectedType.getSelectionModel().select(index);
+        String text = String.format(
+                "NAME: %s\nCUSTOMERS SERVED: %d\nSCOOPS SERVED: %d\nMONEY TAKEN: %s\nTYPE: %s",
+                selectedEmployee.getName(), selectedEmployee.getCustomersServed(), selectedEmployee.getScoopsServed(),
+                moneyFormat.format(selectedEmployee.getMoneyTaken()), selectedEmployee.getType()
+        );
+
+        if(selectedEmployee.getClass() == Stocker.class)
+            text += "\nSTAMINA: " + ((Stocker)selectedEmployee).getStamina();
+        else if(selectedEmployee.getClass() == Cashier.class)
+            text += "\nSTAMINA: " + ((Cashier)selectedEmployee).getPatience();
+
+		labelSelectedEmployee.setText(text);
 	}
 	
 	private void updateNewForm() {
@@ -201,6 +180,7 @@ public class EmployeeManagerState extends AppState {
 		//Update list
 		shop.addWorker(temp);
 		employeeList.setItems(getEmployeesListData());
+        shop.setDataChanged();
 		
 		//Clear lists
 		tfWorkerName.clear();
@@ -214,10 +194,6 @@ public class EmployeeManagerState extends AppState {
 		
 		return true;
 	}
-
-    private void updateWorker() {
-
-    }
 
     private void setActiveWorker() {
         if(selectedEmployee.getClass() == Stocker.class) {
@@ -234,6 +210,19 @@ public class EmployeeManagerState extends AppState {
         }
 
         employeeList.setItems(getEmployeesListData());
+    }
+
+    private void fireWorker() {
+        //If active
+        if(selectedEmployee.getClass() == Stocker.class) {
+            if(selectedEmployee == shop.getActiveStocker()) shop.setActiveStocker(null);
+        }else if(selectedEmployee.getClass() == Cashier.class) {
+            if(selectedEmployee == shop.getActiveCashier()) shop.setActiveCashier(null);
+        }
+
+        shop.removeWorker(employeeList.getSelectionModel().getSelectedIndex());
+        employeeList.setItems(getEmployeesListData());
+        shop.setDataChanged();
     }
 
 	private ObservableList<String> getEmployeesListData() {

@@ -12,7 +12,12 @@ import java.util.ArrayList;
 /**
  * Created by Cameron on 11/29/15.
  */
+
 public class Shop {
+
+    public interface ShopDataChangedListener {
+        void dataChanged();
+    }
 
     ArrayList<IceCream> icecream;
     ArrayList<Customer> customers;
@@ -24,6 +29,8 @@ public class Shop {
 
     CashRegister register;
 
+    private ShopDataChangedListener listener;
+
     public Shop() {
         employees = DataLoader.getWorkers();
         customers = DataLoader.getCustomers();
@@ -31,6 +38,10 @@ public class Shop {
 
         orders = new ArrayList<>();
         register = new CashRegister();
+    }
+
+    public void setListener(ShopDataChangedListener listener) {
+        this.listener = listener;
     }
 
     public ArrayList<IceCream> getIcecream() {
@@ -96,4 +107,8 @@ public class Shop {
     public void addOrder(Order o) { this.orders.add(o); }
 
     public void removeOrder(int i) { this.orders.remove(i); }
+
+    public void setDataChanged() {
+        if(listener != null) listener.dataChanged();
+    }
 }

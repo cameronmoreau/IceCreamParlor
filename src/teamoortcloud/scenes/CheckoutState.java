@@ -1,22 +1,5 @@
 package teamoortcloud.scenes;
 
-import java.text.NumberFormat;
-import java.util.ArrayList;
-
-import javax.swing.text.NumberFormatter;
-
-import teamoortcloud.icecream.IceCream;
-import teamoortcloud.icecream.IceCreamBananaSplit;
-import teamoortcloud.icecream.IceCreamCone;
-import teamoortcloud.icecream.IceCreamExtra;
-import teamoortcloud.icecream.IceCreamRootBeerFloat;
-import teamoortcloud.icecream.IceCreamSoda;
-import teamoortcloud.icecream.IceCreamSundae;
-import teamoortcloud.icecream.Serving;
-import teamoortcloud.other.Order;
-import teamoortcloud.other.Shop;
-import teamoortcloud.people.Customer;
-import teamoortcloud.people.Worker;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,10 +10,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import teamoortcloud.icecream.*;
+import teamoortcloud.other.Order;
+import teamoortcloud.other.Shop;
+
+import java.text.NumberFormat;
 
 public class CheckoutState extends AppState {
 	
@@ -50,6 +36,7 @@ public class CheckoutState extends AppState {
 	ComboBox<String> comboCone;
 	
 	Button btnAddToOrder;
+    Label labelTotal;
 
 	public CheckoutState(StateManager sm) {
 		super(sm);
@@ -61,6 +48,9 @@ public class CheckoutState extends AppState {
 		
 		order = new Order();
 		moneyFormat = NumberFormat.getCurrencyInstance();
+
+        order.setCustomer(shop.getCustomers().get(0));
+        order.setWorker(shop.getActiveCashier());
 		
 		//Panes
 		BorderPane basePane = new BorderPane();
@@ -77,9 +67,11 @@ public class CheckoutState extends AppState {
 		leftPane.setSpacing(5);
 		leftPane.setPadding(new Insets(0, 5, 5, 5));
 		
-		Label labelCustomer = new Label("Current Customer: <Customer>");
+		Label labelCustomer = new Label("Current Customer: " + order.getCustomer().getName());
+        labelTotal = new Label();
+        updateTotal();
 		
-		orderList = new ListView<String>();
+		orderList = new ListView<>();
 		
 		//Bottom buttons
 		Button btnRemoveItem = new Button("Remove Item");
@@ -94,7 +86,7 @@ public class CheckoutState extends AppState {
 		borderPane.setLeft(btnRemoveItem);
 		borderPane.setRight(new VBox(btnCheckoutCredit, btnCheckoutCash));
 		
-		leftPane.getChildren().addAll(labelCustomer, orderList, borderPane);
+		leftPane.getChildren().addAll(labelCustomer, labelTotal, orderList, borderPane);
 		
 		return leftPane;
 	}
@@ -104,7 +96,7 @@ public class CheckoutState extends AppState {
     }
 
     private void checkoutWithCredit() {
-        this.sm.setScene(new CheckoutCreditState(this.sm).scene);
+        this.sm.setScene(new CheckoutCreditState(this.sm, order, shop).scene);
     }
 
     private VBox setupRightPane() {
@@ -274,6 +266,7 @@ public class CheckoutState extends AppState {
 		
 		//Add to list
 		updateOrderList();
+        updateTotal();
 	}
 	
 	private void removeFromOrder() {
@@ -282,6 +275,8 @@ public class CheckoutState extends AppState {
 			orderList.getItems().remove(index);
 			order.removeServing(index);
 		}
+
+        updateTotal();
 	}
 	
 	private void checkOtherFields() {
@@ -327,5 +322,9 @@ public class CheckoutState extends AppState {
 			else boxes[i].setDisable(true);
 		}
 	}
+
+    private void updateTotal() {
+        labelTotal.setText(moneyFormat.format(order.getTotal()));
+    }
 
 }

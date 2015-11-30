@@ -29,7 +29,13 @@ public class Cashier extends Worker {
 
 	public boolean getOnBreak() { return this.onBreak; }
 
-	@Override
+    public int getPatience() {
+        return patience;
+    }
+
+    public void updatePatience(int a) { this.patience += a; }
+
+    @Override
 	public StringProperty onBreakProperty() {
 		return new SimpleStringProperty(String.valueOf(onBreak));
 	}

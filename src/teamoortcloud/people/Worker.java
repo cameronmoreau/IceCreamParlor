@@ -32,6 +32,8 @@ public class Worker {
 		this.moneyTaken = moneyTaken;
 	}
 
+	public void addMoneyTaken(double money) { this.moneyTaken += money; }
+
 	public long getId() {
 		return id;
 	}

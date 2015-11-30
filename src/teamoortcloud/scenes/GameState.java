@@ -1,21 +1,15 @@
 package teamoortcloud.scenes;
 
-import java.awt.Point;
-import java.util.ArrayList;
-
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -23,30 +17,34 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import teamoortcloud.engine.App;
-import teamoortcloud.engine.DataLoader;
 import teamoortcloud.engine.ShopLog;
 import teamoortcloud.engine.ShopSimulation;
-import teamoortcloud.icecream.IceCream;
 import teamoortcloud.other.Shop;
 import teamoortcloud.people.Customer;
-import teamoortcloud.people.Worker;
 
-public class GameState extends AppState {
+import java.awt.*;
+import java.text.NumberFormat;
+
+public class GameState extends AppState implements Shop.ShopDataChangedListener {
 
 	Shop shop;
     
 	ShopSimulation game;
     ShopLog log;
+    Label statusLabel;
+    NumberFormat moneyFormat;
 	
 	StateManager subManager;
 	
 	public GameState(StateManager sm) {
 		super(sm);
-        log = new ShopLog();
 		shop = new Shop();
 		game = new ShopSimulation();
 
+        statusLabel = new Label();
+        shop.setListener(this);
+
+        moneyFormat = NumberFormat.getCurrencyInstance();
         
 		//Setup basic panes + contents
 		BorderPane rootPane = new BorderPane();
@@ -61,11 +59,15 @@ public class GameState extends AppState {
         setupSubWindow();
 	}
 
-    private HBox initStatusBar() {
-        HBox pane = new HBox();
+    private BorderPane initStatusBar() {
+        BorderPane pane = new BorderPane();
         pane.setPadding(new Insets(5));
 
-        pane.getChildren().addAll(log);
+        log = new ShopLog();
+        statusLabel.setTextFill(Color.WHITE);
+        pane.setLeft(log);
+        pane.setRight(statusLabel);
+
         return pane;
     }
 
@@ -99,11 +101,13 @@ public class GameState extends AppState {
 		btnManager.setOnAction(e -> employeesWindow());
 		btnStocker.setOnAction(e -> stockerWindow());
 		btnCashier.setOnAction(e -> checkoutWindow());
+		btnCashier.setOnAction(e -> checkoutWindow());
 
 		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnCustomers);
 
 		//right ToolBar
 		Button btnStats = new Button("Shop Overview");
+        btnStats.setOnAction(e -> statsWindow());
 		btnStats.getStyleClass().add("menu-button");
 		btnCustomers.getStyleClass().add("menu-button");
 		rightPane.getChildren().addAll(btnStats);
@@ -136,11 +140,6 @@ public class GameState extends AppState {
 			
 		});
 		
-		//gc.setFill(Color.BLACK);
-		//gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		
-		//game.draw(gc);
-		
 		new AnimationTimer() {
 
 			@Override
@@ -168,18 +167,15 @@ public class GameState extends AppState {
 				(int)mouse.getX() / 16, (int)mouse.getY() / 16
 		), 0, 0);
 	}
-	
-	private HBox initBottomStats() {
-		HBox pane = new HBox();
-		
-		pane.getChildren().addAll(
-			new Label("Total Happines: <number>"),
-			new Label("Total Customers: <number>"),
-			new Label("Current Time: <number>")
-		);
-		
-		return pane;
-	}
+
+    private void updateStatus() {
+        statusLabel.setText(String.format(
+                "Total Customers: %d\nTotal Employees: %d\n\nRegister Til: %s\nOrders Proccessed: %d",
+                shop.getCustomers().size(), shop.getEmployees().size(),
+                moneyFormat.format(shop.getRegister().getTil().getTotal()),
+                shop.getOrders().size()
+        ));
+    }
 
     private void setupSubWindow() {
         //Setup Stage
@@ -193,9 +189,24 @@ public class GameState extends AppState {
     }
 
 	private void checkoutWindow() {
+        //Check for errors
+        if(shop.getActiveCashier() == null) {
+            showError("You must choose an active cashier");
+            return;
+        }
+        else if(shop.getActiveCashier().getPatience() < 1) {
+            showError("Cashier is out of patience");
+            return;
+        }
+
 		this.subManager.setScene(new CheckoutState(this.subManager, shop).scene);
         this.subManager.getStage().show();
 	}
+
+    private void statsWindow() {
+        this.subManager.setScene(new ShopOverviewState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
+    }
 	
 	private void employeesWindow() {
         this.subManager.setScene(new EmployeeManagerState(this.subManager, shop).scene);
@@ -203,6 +214,11 @@ public class GameState extends AppState {
 	}
 	
 	private void stockerWindow() {
+        if(shop.getActiveStocker() == null) {
+            showError("You must choose an active stocker");
+            return;
+        }
+
         this.subManager.setScene(new StockerState(this.subManager, shop).scene);
         this.subManager.getStage().show();
 	}
@@ -229,6 +245,22 @@ public class GameState extends AppState {
 			}
 
 		}).start();
+
+        //Status
+        updateStatus();
 	}
 
+    private void showError(String error) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Uh oh...");
+        alert.setContentText(error);
+
+        alert.showAndWait();
+    }
+
+    @Override
+    public void dataChanged() {
+        updateStatus();
+    }
 }

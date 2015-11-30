@@ -14,11 +14,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import teamoortcloud.other.Order;
+import teamoortcloud.other.Shop;
+import teamoortcloud.people.Cashier;
+import teamoortcloud.people.Customer;
 
 public class CheckoutCreditState extends AppState {
 
-    public CheckoutCreditState(StateManager sm) {
+    Order order;
+    Shop shop;
+
+    public CheckoutCreditState(StateManager sm, Order order, Shop shop) {
         super(sm);
+
+        this.shop = shop;
+        this.order = order;
 
         VBox rootPane = new VBox();
         rootPane.setPadding(new Insets(5));
@@ -51,7 +61,7 @@ public class CheckoutCreditState extends AppState {
         btnSubmit.getStyleClass().add("menu-button");
 
         btnClear.setOnAction(e -> initDraw(gc));
-        btnSubmit.setOnAction(e -> sm.getStage().close());
+        btnSubmit.setOnAction(e -> submit());
 
         buttonPane.getChildren().addAll(btnClear, btnSubmit);
 
@@ -86,6 +96,21 @@ public class CheckoutCreditState extends AppState {
 
                     }
                 });
+    }
+
+    private void submit() {
+        shop.getRegister().addCredit(order.getTotal());
+        order.getWorker().addMoneyTaken(order.getTotal());
+
+        if(order.getWorker().getClass() == Cashier.class) {
+            ((Cashier)order.getWorker()).updatePatience(-1);
+        }
+
+        order.setPaid(true);
+        shop.addOrder(order);
+        shop.setDataChanged();
+
+        sm.getStage().close();
     }
 
     private void initDraw(GraphicsContext gc){
