@@ -35,43 +35,37 @@ public class Customer {
     	this.id = id;
     	this.name = name;
     	this.totalMoney = totalMoney;
-    	happiness=0;
-    	wallet=
+    	happiness=20;
+    	wallet=makeChange(totalMoney);
     }
     
-    public Transaction makeChange(Transaction choosenWallet, double price) {
+    public Transaction makeChange(double price) {
         Transaction changeBack = new Transaction();
 
-        int priceChange = (int)((Math.ceil(price) - price) * 100);
-        int coinChange = (int)((Math.ceil(price) - price) * 100);
-        int dollarRemaining = (int)(Math.ceil(choosenWallet.getTotal()) - Math.ceil(price));
-        int remaining = priceChange - coinChange;
+        //Get Dollars change back
+        changeBack.twenties = (int) (price / 20);
+        double remaining = price % 20;
 
-        if(remaining != 0) dollarRemaining += 1;
+        changeBack.tens = (int) (price / 10);
+        remaining = remaining % 10;
+
+        changeBack.fives = (int) (price / 5);
+        remaining = remaining % 5;
+
+        changeBack.ones = (int) (price / 1);
+        
 
         //Get Change Back
-        changeBack.quarters = remaining / 25;
-        remaining = remaining % 25;
+        changeBack.quarters = (int) (price / 0.25);
+        remaining = remaining % 0.25;
 
-        changeBack.dimes = remaining / 10;
-        remaining = remaining % 10;
+        changeBack.dimes = (int) (price / 0.10);
+        remaining = remaining % 0.10;
 
-        changeBack.nickels = remaining / 5;
-        remaining = remaining % 5;
+        changeBack.nickels = (int) (price / 0.05);
+        remaining = remaining % 0.5;
 
-        changeBack.pennies = remaining / 1;
-
-        //Get Dollars change back
-        changeBack.twenties = dollarRemaining / 20;
-        remaining = remaining % 20;
-
-        changeBack.tens = dollarRemaining / 10;
-        remaining = remaining % 10;
-
-        changeBack.fives = dollarRemaining / 5;
-        remaining = remaining % 5;
-
-        changeBack.ones = dollarRemaining / 1;
+        changeBack.pennies = (int) (price / 0.01);
 
         return changeBack;
     }

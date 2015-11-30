@@ -26,7 +26,6 @@ import teamoortcloud.people.Worker;
 
 public class CustomerState extends AppState {
 	
-	final static String[] WORKER_TYPES = {"Worker", "Stocker", "Cashier"};
 	NumberFormat moneyFormat;
 	
 	Shop shop;
@@ -34,8 +33,8 @@ public class CustomerState extends AppState {
 	
 	Label labelSelectedCustomer;
 	ComboBox<String> comboSelectedType, comboWorkerType;
-	Button btnAddWorker, btnUpdateWorker, btnSetActive;
-	TextField tfCustomerName, tfCustomerMoney;
+	Button btnAddCustomer, btnUpdateName, btnUpdateMoney;
+	TextField tfCustomerName, tfCustomerMoney, tfNewCustomerName, tfNewCustomerMoney;
 	ListView<String> customerList;
 	
 
@@ -99,32 +98,76 @@ public class CustomerState extends AppState {
 		bottomPane.setSpacing(5);
 		bottomPane.setPadding(new Insets(0, 5, 5, 5));
 		
-		btnAddWorker = new Button("Add Worker");
-		btnAddWorker.setDisable(true);
-		btnAddWorker.setOnAction(e -> addNewWorker());
+		btnAddCustomer = new Button("Add Customer");
+		btnAddCustomer.setDisable(true);
+		btnAddCustomer.setOnAction(e -> addNewCustomer());
 		tfCustomerName = new TextField();
 		tfCustomerName.textProperty().addListener((observable, oldValue, newValue) -> {
 			updateNewForm();
 		});
-		tfCustomerMoney = new TextField();
-		tfCustomerMoney.textPropert().addListener(())
+		tfCustomerMoney = new TextField(){
+            @Override 
+            public void replaceText(int start, int end, String text) {
+                // If the replaced text would end up being invalid, then simply
+                // ignore this call!
+                if (!text.matches("[a-z]")) {
+                    super.replaceText(start, end, text);
+                }
+            }
+
+            @Override 
+            public void replaceSelection(String text) {
+                if (!text.matches("[a-z]")) {
+                    super.replaceSelection(text);
+                }
+            }
+        };
+		tfCustomerMoney.textProperty().addListener((observable, oldValue, newValue) -> {updateNewForm();});
 		
 		
 		topPane.getChildren().addAll(
 			new Label("Customer's Name:"), tfCustomerName,
 			new Label("Money:"), tfCustomerMoney,
-			btnAddWorker
+			btnAddCustomer
 		);
 		
 		//Bottom Pane
 		HBox updatePane = new HBox();
 		updatePane.setSpacing(5);
 		
-		//comboSelectedType = new ComboBox<>(FXCollections.observableArrayList(WORKER_TYPES));
-		//btnUpdateWorker = new Button("Update");
-		//btnSetActive = new Button("Set Active");
+		
+		btnUpdateName = new Button("Update Name");
+		btnUpdateMoney = new Button("Update Money");
+		btnUpdateName.setOnAction(e -> updateName());
+		btnUpdateMoney.setOnAction(e -> updateMoney());
+		btnUpdateName.setDisable(true);
+		btnUpdateMoney.setDisable(true);
+		
 		labelSelectedCustomer = new Label("Nothing selected...");
+		
 
+		tfNewCustomerName = new TextField();
+		tfNewCustomerName.textProperty().addListener((observable, oldValue, newValue) -> {
+			updateNewForm();
+		});
+		tfNewCustomerMoney = new TextField(){
+            @Override 
+            public void replaceText(int start, int end, String text) {
+                // If the replaced text would end up being invalid, then simply
+                // ignore this call!
+                if (!text.matches("[a-z]")) {
+                    super.replaceText(start, end, text);
+                }
+            }
+
+            @Override 
+            public void replaceSelection(String text) {
+                if (!text.matches("[a-z]")) {
+                    super.replaceSelection(text);
+                }
+            }
+        };
+		tfNewCustomerMoney.textProperty().addListener((observable, oldValue, newValue) -> {updateNewForm();});
 		
 		bottomPane.getChildren().addAll(labelSelectedCustomer);
 		
@@ -135,51 +178,48 @@ public class CustomerState extends AppState {
 	
 	//Helper functions
 	private void updateSelectedCustomer() {
-		
 
-
-
-		labelSelectedCustomer.setText(String.format(
-			"NAME: %s\nMONEY: %d\nHAPPINESS: %d",
-			selectedCustomer.getName(), selectedCustomer.getTotalMoney(), selectedCustomer.getHappiness()
-		));
+		labelSelectedCustomer.setText("NAME: "+selectedCustomer.getName()+
+				"\nMONEY: "+moneyFormat.format(selectedCustomer.getTotalMoney())+
+				"\nHAPPINESS: "+selectedCustomer.getHappiness());
+		btnUpdateName.setDisable(false);
+		btnUpdateMoney.setDisable(false);
 		
 	}
 	
 	private void updateNewForm() {
-		btnAddWorker.setDisable(!newFormIsValid());
+		btnAddCustomer.setDisable(!newFormIsValid());
+	}
+	
+	private void updateName()
+	{
+		
+	}
+	
+	private void updateMoney()
+	{
+		
 	}
 	
 	private void addNewCustomer() {
 		Customer temp;
 		String name = tfCustomerName.getText();
-		double money = tfCustomerCash.getText();
-		temp = new Customer(0, name, )
-		switch(comboWorkerType.getSelectionModel().getSelectedItem()) {
-		case "Cashier":
-			temp = new Cashier(0, name);
-			break;
-		case "Stocker":
-			temp = new Stocker(0, name);
-			break;
-		default:
-			temp = new Worker(0, name);
-		}
+		double money = Double.parseDouble(tfCustomerMoney.getText());
+		temp = new Customer(0, name, money);
 		
 		//Update list
-		shop.addWorker(temp);
+		shop.addCustomer(temp);
 		customerList.setItems(getCustomerListData());
 		
 		//Clear lists
 		tfCustomerName.clear();
-		comboWorkerType.getSelectionModel().clearSelection();
-		btnAddWorker.setDisable(true);
+		tfCustomerMoney.clear();
+		btnAddCustomer.setDisable(true);
 	}
 	
 	private Boolean newFormIsValid() {
 		if(tfCustomerName.getText().length() < 1) return false;
-		if(comboWorkerType.getSelectionModel().getSelectedIndex() == -1) return false;
-		if(tfCustomerMoney.getText())
+		if(Double.parseDouble(tfCustomerMoney.getText())>0) return false;
 		return true;
 	}
 
@@ -191,10 +231,8 @@ public class CustomerState extends AppState {
 
 	private ObservableList<String> getCustomerListData() {
 		ObservableList<String> array = FXCollections.observableArrayList();
-		for(Worker w : shop.getEmployees()) {
-            String s = w.getName() + ": " + w.getType();
-            if(shop.getActiveStocker() == w) s += " (Active Stocker)";
-            else if(shop.getActiveCashier() == w) s += " (Active Cashier)";
+		for(Customer c : shop.getCustomers()) {
+            String s = c.getName() + ": " + c.getTotalMoney();
             array.add(s);
         }
 		return array;
