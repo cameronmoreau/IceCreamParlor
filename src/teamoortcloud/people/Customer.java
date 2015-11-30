@@ -29,7 +29,7 @@ public class Customer {
         this.wallet.tens = dollar10;
         this.wallet.twenties = dollar20;
 	}
-    
+
     //Make sure they have enough money
     public boolean checkWallet(Transaction choosenWallet) {
         Transaction newWallet = new Transaction();
