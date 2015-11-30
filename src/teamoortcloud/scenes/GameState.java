@@ -1,6 +1,7 @@
 package teamoortcloud.scenes;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -8,14 +9,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -49,7 +48,19 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 		game = new ShopSimulation(shop);
         gameClock = new GameClock();
 
-        gameClock.setListener(() -> game.startCrappyHour());
+        gameClock.setListener(new GameClock.GameClockListener() {
+            @Override
+            public void crappyHourBegins() {
+                game.startCrappyHour();
+                Platform.runLater(() -> shop.getLog().addLog("The chaos has begun.."));
+            }
+
+            @Override
+            public void shopClosed() {
+
+                Platform.runLater(() -> endGame());
+            }
+        });
 
         //Check if game closed
         sm.getStage().setOnCloseRequest(e -> stageClosed());
@@ -274,7 +285,14 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 	}
 
     private void endGame() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText("That's it, you failed");
+        alert.setContentText("Score: -1");
 
+        alert.setOnCloseRequest(e -> sm.setStage(StateManager.STATE_MENU));
+
+        alert.showAndWait();
     }
 
     private void showError(String error) {
