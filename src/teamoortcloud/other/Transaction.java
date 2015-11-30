@@ -17,5 +17,5 @@ public class Transaction {
                 ones + fives*5 + tens*10 +
                 twenties*20;
     }
-
+    
 }

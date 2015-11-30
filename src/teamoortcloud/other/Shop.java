@@ -104,6 +104,10 @@ public class Shop {
 
     public void removeWorker(int i) { this.employees.remove(i); }
 
+    public void addCustomer(Customer c) { this.customers.add(c); }
+
+    public void removeCustomer(int i) { this.customers.remove(i); }
+    
     public void addOrder(Order o) { this.orders.add(o); }
 
     public void removeOrder(int i) { this.orders.remove(i); }

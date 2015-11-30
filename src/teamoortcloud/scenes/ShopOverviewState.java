@@ -57,22 +57,35 @@ public class ShopOverviewState extends AppState {
         ObservableList<PieChart.Data> pieMoney = FXCollections.observableArrayList();
 		for(Worker w : worker) pieMoney.add(new PieChart.Data(w.getName(),w.getMoneyTaken()));
         final PieChart pchartMoney = new PieChart(pieMoney);
-        pchartMoney.setTitle("Customer Happiness");
+        pchartMoney.setTitle("Worker Money");
         
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         final BarChart<String,Number> bchartHappiness = new BarChart<String,Number>(xAxis,yAxis);
-        bchartHappiness.setTitle("Customer Happiness");
+        bchartHappiness.setTitle("");
+        bchartHappiness.setLegendVisible(false);
         xAxis.setLabel("Customer");       
         yAxis.setLabel("Happiness");
  
         XYChart.Series series = new XYChart.Series();
         for(Customer c : customer) series.getData().add(new XYChart.Data(c.getName(), c.getHappiness()));
         bchartHappiness.getData().add(series);
+        
+        final CategoryAxis xAxis2 = new CategoryAxis();
+        final NumberAxis yAxis2 = new NumberAxis();
+        final BarChart<String,Number> bchartMoney = new BarChart<String,Number>(xAxis2,yAxis2);
+        bchartMoney.setTitle("");
+        bchartMoney.setLegendVisible(false);
+        xAxis2.setLabel("Worker");       
+        yAxis2.setLabel("Money");
+ 
+        XYChart.Series series2 = new XYChart.Series();
+        for(Worker w : worker) series2.getData().add(new XYChart.Data(w.getName(),w.getMoneyTaken()));
+        bchartMoney.getData().add(series2);
 		
 		BorderPane borderPane = new BorderPane();
 		borderPane.setLeft(new VBox(pchartHappiness,bchartHappiness));
-		borderPane.setRight(new VBox(pchartMoney));
+		borderPane.setRight(new VBox(pchartMoney,bchartMoney));
 		
 		graphPane.getChildren().addAll(borderPane);
 		

@@ -29,6 +29,46 @@ public class Customer {
         this.wallet.tens = dollar10;
         this.wallet.twenties = dollar20;
 	}
+    
+    public Customer(long id, String name, double totalMoney)
+    {
+    	this.id = id;
+    	this.name = name;
+    	this.totalMoney = totalMoney;
+    	happiness=20;
+    	wallet=makeChange(totalMoney);
+    }
+    
+    public Transaction makeChange(double price) {
+        Transaction changeBack = new Transaction();
+
+        //Get Dollars change back
+        changeBack.twenties = (int) (price / 20);
+        double remaining = price % 20;
+
+        changeBack.tens = (int) (price / 10);
+        remaining = remaining % 10;
+
+        changeBack.fives = (int) (price / 5);
+        remaining = remaining % 5;
+
+        changeBack.ones = (int) (price / 1);
+        
+
+        //Get Change Back
+        changeBack.quarters = (int) (price / 0.25);
+        remaining = remaining % 0.25;
+
+        changeBack.dimes = (int) (price / 0.10);
+        remaining = remaining % 0.10;
+
+        changeBack.nickels = (int) (price / 0.05);
+        remaining = remaining % 0.5;
+
+        changeBack.pennies = (int) (price / 0.01);
+
+        return changeBack;
+    }
 
     //Make sure they have enough money
     public boolean checkWallet(Transaction choosenWallet) {
@@ -76,6 +116,17 @@ public class Customer {
 
         return name + " " + badActions[new Random().nextInt(badActions.length)] + " and leaves";
 	}
+    
+    public void changeName(String name)
+    {
+    	this.name = name;
+    }
+    
+    public void changeMoney(Double money)
+    {
+    	totalMoney = money;
+    	makeChange(money);
+    }
 
     public long getId() {
         return id;

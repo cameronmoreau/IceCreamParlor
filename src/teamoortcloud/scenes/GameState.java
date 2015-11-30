@@ -101,7 +101,7 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 		btnManager.setOnAction(e -> employeesWindow());
 		btnStocker.setOnAction(e -> stockerWindow());
 		btnCashier.setOnAction(e -> checkoutWindow());
-		btnCashier.setOnAction(e -> checkoutWindow());
+		btnCustomers.setOnAction(e -> customerWindow());
 
 		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnCustomers);
 
@@ -112,7 +112,8 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 		btnCustomers.getStyleClass().add("menu-button");
 		rightPane.getChildren().addAll(btnStats);
 
-
+		btnStats.setOnAction(e -> shopoverviewWindow());
+		
 		pane.setLeft(leftPane);
 		pane.setRight(rightPane);
 
@@ -208,8 +209,18 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
         this.subManager.getStage().show();
     }
 	
+	private void shopoverviewWindow() {
+		this.subManager.setScene(new ShopOverviewState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
+	}
+	
 	private void employeesWindow() {
         this.subManager.setScene(new EmployeeManagerState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
+	}
+	
+	private void customerWindow() {
+        this.subManager.setScene(new CustomerState(this.subManager, shop).scene);
         this.subManager.getStage().show();
 	}
 	

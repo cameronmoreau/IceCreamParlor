@@ -18,7 +18,11 @@ public class CashRegister {
 
         this.totalMoney += change.getTotal();
     }
-
+    
+    public CashRegister(double money)
+    {
+    	totalMoney = money;
+    }
 
     //How much from the very beginning
     public double getTotalMoney() {
