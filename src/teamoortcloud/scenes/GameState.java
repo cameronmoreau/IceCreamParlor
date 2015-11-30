@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import teamoortcloud.engine.GameClock;
-import teamoortcloud.engine.ShopLog;
 import teamoortcloud.engine.ShopSimulation;
 import teamoortcloud.other.Shop;
 import teamoortcloud.people.Customer;
@@ -33,7 +32,7 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 	ShopSimulation game;
     GameClock gameClock;
 
-    ShopLog log;
+    Label logLabel;
     Label statusLabel;
     NumberFormat moneyFormat;
 	
@@ -44,8 +43,10 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 	public GameState(StateManager sm) {
 		super(sm);
 		shop = new Shop();
-		game = new ShopSimulation();
+		game = new ShopSimulation(shop);
         gameClock = new GameClock();
+
+        gameClock.setListener(() -> game.startCrappyHour());
 
         //Check if game closed
         sm.getStage().setOnCloseRequest(e -> stageClosed());
@@ -72,9 +73,10 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
         BorderPane pane = new BorderPane();
         pane.setPadding(new Insets(5));
 
-        log = new ShopLog();
+        logLabel = new Label();
+        logLabel.setTextFill(Color.WHITE);
         statusLabel.setTextFill(Color.WHITE);
-        pane.setLeft(log);
+        pane.setLeft(logLabel);
         pane.setRight(statusLabel);
 
         return pane;
@@ -185,6 +187,8 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 	}
 
     private void updateStatus() {
+        logLabel.setText(shop.getLog().getMessages());
+
         statusLabel.setText(String.format(
                 "Total Customers: %d\nTotal Employees: %d\n\nRegister Til: %s\nOrders Proccessed: %d",
                 shop.getCustomers().size(), shop.getEmployees().size(),
@@ -254,7 +258,7 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
         gameClock.start();
 
 		//Queue customers
-        for(Customer c : shop.getCustomers()) log.addLog(c.getName() + " enters the building");
+        for(Customer c : shop.getCustomers()) shop.getLog().addLog(c.getName() + " enters the building");
 
 		new Thread(new Runnable() {
 

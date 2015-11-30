@@ -17,7 +17,6 @@ import javafx.scene.paint.Color;
 import teamoortcloud.other.Order;
 import teamoortcloud.other.Shop;
 import teamoortcloud.people.Cashier;
-import teamoortcloud.people.Customer;
 
 public class CheckoutCreditState extends AppState {
 

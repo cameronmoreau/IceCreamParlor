@@ -1,6 +1,7 @@
 package teamoortcloud.other;
 
 import teamoortcloud.engine.DataLoader;
+import teamoortcloud.engine.ShopLog;
 import teamoortcloud.icecream.IceCream;
 import teamoortcloud.people.Cashier;
 import teamoortcloud.people.Customer;
@@ -26,6 +27,7 @@ public class Shop {
 
     Stocker activeStocker;
     Cashier activeCashier;
+    ShopLog log;
 
     CashRegister register;
 
@@ -40,6 +42,11 @@ public class Shop {
 
         orders = new ArrayList<>();
         register = new CashRegister();
+        log = new ShopLog();
+    }
+
+    public ShopLog getLog() {
+        return log;
     }
 
     public void setListener(ShopDataChangedListener listener) {
