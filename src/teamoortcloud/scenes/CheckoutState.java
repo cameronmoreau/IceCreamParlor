@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import teamoortcloud.icecream.*;
@@ -17,7 +14,6 @@ import teamoortcloud.other.Order;
 import teamoortcloud.other.Shop;
 
 import java.text.NumberFormat;
-import javafx.scene.control.CheckBox;
 
 public class CheckoutState extends AppState {
 	
@@ -35,6 +31,8 @@ public class CheckoutState extends AppState {
 	ComboBox<String> comboFlavors[];
 	ComboBox<String> comboExtras[];
 	ComboBox<String> comboCone;
+
+    CheckBox nuts;
 	
 	Button btnAddToOrder;
     Label labelTotal;
@@ -202,12 +200,25 @@ public class CheckoutState extends AppState {
 		}
 		
                 
-                //Check Button for NUTS! 
-                
-                CheckBox nuts = new CheckBox();
-                nuts.setText("Nuts");
-                nuts.setSelected(false);
-                rightPane.getChildren().addAll(nuts);
+		//Check Button for NUTS!
+		nuts = new CheckBox("Nuts?");
+        nuts.setDisable(true);
+        nuts.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(tempServing.getClass() == IceCreamBananaSplit.class) {
+                    ((IceCreamBananaSplit)tempServing).setHasNuts(nuts.isSelected());
+                }
+                else if(tempServing.getClass() == IceCreamSundae.class) {
+                    ((IceCreamSundae)tempServing).setHasNuts(nuts.isSelected());
+                }
+
+                updateFields();
+            }
+        });
+
+
+		rightPane.getChildren().addAll(nuts);
                 
                 
 		//Add and estimate price
@@ -293,6 +304,11 @@ public class CheckoutState extends AppState {
 		//Check for cone
 		if(tempServing.getClass() == IceCreamCone.class) comboCone.setDisable(false);
 		else comboCone.setDisable(true);
+
+        nuts.setDisable(
+                !(tempServing.getClass() == IceCreamBananaSplit.class ||
+                        tempServing.getClass() == IceCreamSundae.class)
+        );
 	}
 	
 	private void clearFields() {
