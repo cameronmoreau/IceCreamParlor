@@ -17,6 +17,7 @@ import teamoortcloud.other.Order;
 import teamoortcloud.other.Shop;
 
 import java.text.NumberFormat;
+import javafx.scene.control.CheckBox;
 
 public class CheckoutState extends AppState {
 	
@@ -68,8 +69,8 @@ public class CheckoutState extends AppState {
 		leftPane.setPadding(new Insets(0, 5, 5, 5));
 		
 		Label labelCustomer = new Label("Current Customer: " + order.getCustomer().getName());
-        labelTotal = new Label();
-        updateTotal();
+                labelTotal = new Label();
+                updateTotal();
 		
 		orderList = new ListView<>();
 		
@@ -200,6 +201,15 @@ public class CheckoutState extends AppState {
 			rightPane.getChildren().add(comboExtras[i]);
 		}
 		
+                
+                //Check Button for NUTS! 
+                
+                CheckBox nuts = new CheckBox();
+                nuts.setText("Nuts");
+                nuts.setSelected(false);
+                rightPane.getChildren().addAll(nuts);
+                
+                
 		//Add and estimate price
 		btnAddToOrder = new Button("Add to order");
 		btnAddToOrder.setDisable(true);
