@@ -47,6 +47,14 @@ public class Order {
         return orderNumber;
     }
 
+    public long getToalScoops() {
+        long l = 0;
+        for(Serving s : servings) {
+            l += s.getMaxScoops();
+        }
+        return l;
+    }
+
     public boolean isPaid() {
         return paid;
     }

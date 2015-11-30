@@ -99,13 +99,6 @@ public class CheckoutCreditState extends AppState {
 
     private void submit() {
         shop.getRegister().addCredit(order.getTotal());
-        order.getWorker().addMoneyTaken(order.getTotal());
-
-        if(order.getWorker().getClass() == Cashier.class) {
-            ((Cashier)order.getWorker()).updatePatience(-1);
-        }
-        
-        order.setPaid(true);
         shop.addOrder(order);
         shop.setDataChanged();
 

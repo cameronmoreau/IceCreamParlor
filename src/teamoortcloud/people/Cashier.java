@@ -35,6 +35,8 @@ public class Cashier extends Worker {
 
     public void updatePatience(int a) { this.patience += a; }
 
+	public void addScoops(long scoop) { this.scoopsServed += scoop; }
+
     @Override
 	public StringProperty onBreakProperty() {
 		return new SimpleStringProperty(String.valueOf(onBreak));

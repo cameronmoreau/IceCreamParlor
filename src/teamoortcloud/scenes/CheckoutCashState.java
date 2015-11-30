@@ -32,6 +32,7 @@ public class CheckoutCashState extends AppState {
     public CheckoutCashState(StateManager sm, Order order, Shop shop) {
         super(sm);
         this.order = order;
+        this.shop = shop;
         howmuch=0.0;
         valid = new Label[8];
         VBox rootPane = new VBox();
@@ -240,6 +241,7 @@ public class CheckoutCashState extends AppState {
 
     private void payUsingCash() {
         shop.getRegister().makeChange(order.getCustomer().getWallet(), howmuch);
+		shop.addOrder(order);
         sm.getStage().close();
     }
 

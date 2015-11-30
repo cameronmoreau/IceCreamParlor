@@ -154,6 +154,12 @@ public class Shop {
     public void addOrder(Order o) {
         this.orders.add(o);
 
+        getActiveCashier().addMoneyTaken(o.getTotal());
+        getActiveCashier().addScoops(o.getToalScoops());
+        getActiveCashier().updatePatience(-1);
+
+        o.setPaid(true);
+
         if(listener != null) listener.removeCustomer();
 
         for(Stocker s : getOnBreakStockers()) s.changeStamina(1);
