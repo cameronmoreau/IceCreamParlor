@@ -1,8 +1,10 @@
 package teamoortcloud.entities;
 
-import java.util.ArrayList;
-
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class CustomerManager {
 	
@@ -10,9 +12,16 @@ public class CustomerManager {
 	int baseY = 200; 
 	int startX = 0;
 	int endX = 300;
+
+	Image images[];
 	
 	public CustomerManager() {
 		customers = new ArrayList<>();
+
+		images = new Image[8];
+		for(int i = 0; i < images.length; i++) {
+			images[i] = new Image("file:res/characters/character-" + (i + 1) + ".png");
+		}
 	}
 	
 	private ArrayList<CustomerCharacter> getSelectCustomers(int state) {
@@ -33,7 +42,9 @@ public class CustomerManager {
 	}
 	
 	public void queueNewCustomer() {
-		CustomerCharacter c = new CustomerCharacter(496, 272);
+		Random r = new Random();
+
+		CustomerCharacter c = new CustomerCharacter(images[r.nextInt(images.length)], 496, 272);
 		travelToLine(c, getSelectCustomers(CustomerCharacter.STATE_LINE).size());
 		customers.add(c);
 	}
