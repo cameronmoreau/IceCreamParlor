@@ -107,7 +107,8 @@ public class GameState extends AppState {
 		btnShop.getStyleClass().add("menu-button");
 		rightPane.getChildren().addAll(btnStats);
 
-
+		btnStats.setOnAction(e -> shopoverviewWindow());
+		
 		pane.setLeft(leftPane);
 		pane.setRight(rightPane);
 
@@ -193,6 +194,11 @@ public class GameState extends AppState {
 
 	private void checkoutWindow() {
 		this.subManager.setScene(new CheckoutState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
+	}
+	
+	private void shopoverviewWindow() {
+		this.subManager.setScene(new ShopOverviewState(this.subManager, shop).scene);
         this.subManager.getStage().show();
 	}
 	
