@@ -40,7 +40,7 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
 	
 	StateManager subManager;
 
-    private static final boolean debug = true;
+    private static final boolean debug = false;
 	
 	public GameState(StateManager sm) {
 		super(sm);
