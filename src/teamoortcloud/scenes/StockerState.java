@@ -54,7 +54,7 @@ public class StockerState extends AppState {
 		stockerPane.setSpacing(5);
 		stockerPane.setPadding(new Insets(0, 5, 5, 5));
 		
-		Label labelWorker = new Label("Current Stocker: " + stocker.getName() + "\tStamina: 18");// + stocker.getStamina());
+		Label labelWorker = new Label("Current Stocker: " + "\tStamina: 18");// + stocker.getStamina());
 		
 		icecreamList = new ListView<>();
 		icecreamList.setItems(getIceCreamListData());
