@@ -29,6 +29,15 @@ public class Customer {
      *
      * @return
      */
+    
+    public int getHappiness()
+    {
+    	return happiness;
+    }
+    public String getName()
+    {
+    	return name;
+    }
     @Override
     public String toString() {
 		return "Customer [id=" + id + ", name=" + name + ", wallet=" + wallet +
