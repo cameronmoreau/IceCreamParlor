@@ -104,7 +104,7 @@ public class CheckoutCreditState extends AppState {
         if(order.getWorker().getClass() == Cashier.class) {
             ((Cashier)order.getWorker()).updatePatience(-1);
         }
-
+        
         order.setPaid(true);
         shop.addOrder(order);
         shop.setDataChanged();

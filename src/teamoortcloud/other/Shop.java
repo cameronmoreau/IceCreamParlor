@@ -45,6 +45,28 @@ public class Shop {
         log = new ShopLog();
     }
 
+    public ArrayList<Stocker> getOnBreakStockers() {
+        ArrayList<Stocker> l = new ArrayList<>();
+        for(Worker w : employees) {
+            if(w.getClass() == Stocker.class) {
+                if(((Stocker)w).getOnBreak()) l.add((Stocker)w);
+            }
+        }
+
+        return l;
+    }
+
+    public ArrayList<Cashier> getOnBreakCashiers() {
+        ArrayList<Cashier> l = new ArrayList<>();
+        for(Worker w : employees) {
+            if(w.getClass() == Cashier.class) {
+                if(((Cashier)w).getOnBreak()) l.add((Cashier)w);
+            }
+        }
+
+        return l;
+    }
+
     public ShopLog getLog() {
         return log;
     }
@@ -117,7 +139,12 @@ public class Shop {
 
     public void removeCustomer(int i) { this.customers.remove(i); }
     
-    public void addOrder(Order o) { this.orders.add(o); }
+    public void addOrder(Order o) {
+        this.orders.add(o);
+
+        for(Stocker s : getOnBreakStockers()) s.changeStamina(1);
+        for(Cashier s : getOnBreakCashiers()) s.updatePatience(1);
+    }
 
     public void removeOrder(int i) { this.orders.remove(i); }
 
