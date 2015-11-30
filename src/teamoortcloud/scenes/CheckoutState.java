@@ -181,7 +181,7 @@ public class CheckoutState extends AppState {
 		}
 		
 		//Extras
-		rightPane.getChildren().add(new Label("Icecream Extras:"));
+		rightPane.getChildren().add(new Label("Syrups:"));
 		comboExtras = new ComboBox[MAX_EXTRAS];
 		ObservableList<String> orderExtrasList = FXCollections.observableArrayList(IceCreamExtra.getAll());
 		
@@ -259,7 +259,7 @@ public class CheckoutState extends AppState {
     private ObservableList<String> getFlavorListData() {
 		ObservableList<String> array = FXCollections.observableArrayList();
 		for(IceCream c : shop.getIcecream()) {
-            String s = c.getName();
+            String s = c.getFlavor();
 
             if(c.getScoops() < 1) s += " (Out of stock)";
             array.add(s);

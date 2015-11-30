@@ -63,6 +63,7 @@ public class GameState extends AppState {
 
     private HBox initStatusBar() {
         HBox pane = new HBox();
+        pane.setPadding(new Insets(5));
 
         pane.getChildren().addAll(log);
         return pane;
@@ -84,27 +85,27 @@ public class GameState extends AppState {
 		rightPane.setPadding(new Insets(PANE_PADDING));
 
 		//Left ToolBar
-		Button btnCashier, btnStocker, btnManager, btnShop;
+		Button btnCashier, btnStocker, btnManager, btnCustomers;
 		btnCashier = new Button("Cashier");
 		btnStocker = new Button("Stocker");
 		btnManager = new Button("Employees");
-		btnShop = new Button("Shop Settings");
+		btnCustomers = new Button("Customers");
 
 		btnCashier.getStyleClass().add("menu-button");
 		btnStocker.getStyleClass().add("menu-button");
 		btnManager.getStyleClass().add("menu-button");
-		btnShop.getStyleClass().add("menu-button");
+		btnCustomers.getStyleClass().add("menu-button");
 
 		btnManager.setOnAction(e -> employeesWindow());
 		btnStocker.setOnAction(e -> stockerWindow());
 		btnCashier.setOnAction(e -> checkoutWindow());
 
-		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
+		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnCustomers);
 
 		//right ToolBar
 		Button btnStats = new Button("Shop Overview");
 		btnStats.getStyleClass().add("menu-button");
-		btnShop.getStyleClass().add("menu-button");
+		btnCustomers.getStyleClass().add("menu-button");
 		rightPane.getChildren().addAll(btnStats);
 
 
@@ -208,9 +209,8 @@ public class GameState extends AppState {
 	
 	private void startGame() {
 		//Queue customers
-        for(Customer c : shop.getCustomers()) {
-            //log.addLog(c.);
-        }
+        for(Customer c : shop.getCustomers()) log.addLog(c.getName() + " enters the building");
+
 		new Thread(new Runnable() {
 
 			@Override
