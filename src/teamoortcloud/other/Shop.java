@@ -18,6 +18,8 @@ public class Shop {
 
     public interface ShopDataChangedListener {
         void dataChanged();
+        void newCustomer();
+        void removeCustomer();
     }
 
     ArrayList<IceCream> icecream;
@@ -139,12 +141,20 @@ public class Shop {
 
     public void removeWorker(int i) { this.employees.remove(i); }
 
-    public void addCustomer(Customer c) { this.customers.add(c); }
+    public void addCustomer(Customer c) {
+        if(listener != null) listener.newCustomer();
+        this.customers.add(c);
+    }
 
-    public void removeCustomer(int i) { this.customers.remove(i); }
+    public void removeCustomer(int i) {
+        if(listener != null) listener.removeCustomer();
+        this.customers.remove(i);
+    }
     
     public void addOrder(Order o) {
         this.orders.add(o);
+
+        if(listener != null) listener.removeCustomer();
 
         for(Stocker s : getOnBreakStockers()) s.changeStamina(1);
         for(Cashier s : getOnBreakCashiers()) s.updatePatience(1);

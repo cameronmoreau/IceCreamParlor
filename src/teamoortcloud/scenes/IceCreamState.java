@@ -215,8 +215,7 @@ public class IceCreamState extends AppState {
 	
 	private void updateNewCostForm()
 	{
-		if(tfNewIceCreamCost.getText().length()<0)
-			btnUpdateCost.setDisable(tfNewIceCreamCost.getText()==null);
+		btnUpdateCost.setDisable(tfNewIceCreamCost.getText().length()<1);
 	}
 
 	private void updateName()

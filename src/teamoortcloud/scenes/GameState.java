@@ -319,4 +319,14 @@ public class GameState extends AppState implements Shop.ShopDataChangedListener 
     public void dataChanged() {
         updateStatus();
     }
+
+    @Override
+    public void newCustomer() {
+        game.addCustomer();
+    }
+
+    @Override
+    public void removeCustomer() {
+        game.removeCustomer();
+    }
 }

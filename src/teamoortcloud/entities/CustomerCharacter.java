@@ -16,8 +16,8 @@ public class CustomerCharacter {
 	int travelX, travelY;
 	int state;
 	
-	public CustomerCharacter(int x, int y) {
-		this.image = new Image("file:res/images/character.png");
+	public CustomerCharacter(Image image, int x, int y) {
+		this.image = image;
 		this.state = STATE_LINE;
 		this.x = x;
 		this.y = y;
