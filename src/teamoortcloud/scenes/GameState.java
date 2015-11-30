@@ -12,6 +12,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -44,13 +47,32 @@ public class GameState extends AppState {
 		//Setup basic panes + contents
 		VBox rootPane = new VBox();
 		rootPane.setStyle("-fx-background-color: #474F53;");
-		rootPane.getChildren().addAll(initGame(), initToolBar());
+		rootPane.getChildren().addAll(initMenu(), initGame(), initToolBar());
 		
 		startGame();
 		
 		scene = new Scene(rootPane);
 		setupStyle();
         setupSubWindow();
+	}
+	
+	private MenuBar initMenu()
+	{
+		MenuBar menu = new MenuBar();
+		Menu workers = new Menu("Workers");
+		Menu shop = new Menu("Shop");
+		MenuItem cashier = new MenuItem("Cashier");
+		cashier.setOnAction(e -> checkoutWindow());
+		MenuItem stocker = new MenuItem("Stocker");
+		stocker.setOnAction(e -> stockerWindow());
+		MenuItem employees = new MenuItem("Employees");
+		employees.setOnAction(e -> employeesWindow());
+		MenuItem settings = new MenuItem("Shop Settings");
+		MenuItem overview = new MenuItem("Shop Overview");
+		workers.getItems().addAll(cashier,stocker,employees);
+		shop.getItems().addAll(settings,overview);
+		menu.getMenus().addAll(workers,shop);
+		return menu;
 	}
 	
 	private BorderPane initToolBar() {
