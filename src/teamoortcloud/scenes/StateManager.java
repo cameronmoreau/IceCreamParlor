@@ -10,12 +10,6 @@ public class StateManager {
 	public static final int STATE_ABOUT = 2;
 	public static final int STATE_FILE = 3;
 
-    public static final int STATE_SUB_CHECKOUT = 4;
-    public static final int STATE_SUB_CHECKOUT_CASH = 5;
-    public static final int STATE_SUB_CHECKOUT_CREDIT = 6;
-    public static final int STATE_SUB_EMPLOYEE_MANAGER = 7;
-    public static final int STATE_SUB_STOCKER = 8;
-
 	
 	private Stage stage;
 	
@@ -45,23 +39,6 @@ public class StateManager {
                 break;
             case STATE_FILE:
                 stage.setScene(new FileState(this).scene);
-                break;
-
-            case STATE_SUB_CHECKOUT:
-                stage.setScene(new CheckoutState(this).scene);
-                break;
-            case STATE_SUB_CHECKOUT_CASH:
-                stage.setScene(new CheckoutCashState(this).scene);
-                break;
-            case STATE_SUB_CHECKOUT_CREDIT:
-                stage.setScene(new CheckoutCreditState(this).scene);
-                break;
-            case STATE_SUB_EMPLOYEE_MANAGER:
-                stage.setScene(new EmployeeManagerState(this).scene);
-                stage.show();
-                break;
-            case STATE_SUB_STOCKER:
-                //stage.setScene(new StockerState(this).scene);
                 break;
 		}
 	}

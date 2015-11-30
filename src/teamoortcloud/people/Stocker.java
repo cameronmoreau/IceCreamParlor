@@ -10,7 +10,7 @@ public class Stocker extends Worker {
 	
 	public Stocker() {
 		super();
-		this.stamina = 0;
+		this.stamina = 18;
 		this.onBreak = false;
 	}
 
@@ -27,6 +27,26 @@ public class Stocker extends Worker {
 	@Override
 	public StringProperty onBreakProperty() {
 		return new SimpleStringProperty(String.valueOf(onBreak));
+	}
+	
+	public void goOnBreak()
+	{
+		onBreak=true;
+	}
+	
+	public void leaveBreak()
+	{
+		onBreak=false;
+	}
+	
+	public int getStamina()
+	{
+		return stamina;
+	}
+	
+	public void changeStamina(int work)
+	{
+		stamina+=work;
 	}
 	
 	@Override

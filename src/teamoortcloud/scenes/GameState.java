@@ -81,9 +81,8 @@ public class GameState extends AppState {
 		btnShop.getStyleClass().add("menu-button");
 		
 		btnManager.setOnAction(e -> employeesWindow());
-		btnShop.setOnAction(e -> game.addCustomer());
+		btnStocker.setOnAction(e -> stockerWindow());
 		btnCashier.setOnAction(e -> checkoutWindow());
-		btnStocker.setOnAction(e -> game.removeCustomer());
 		
 		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
 		
@@ -181,6 +180,11 @@ public class GameState extends AppState {
 	
 	private void employeesWindow() {
         this.subManager.setScene(new EmployeeManagerState(this.subManager, shop).scene);
+        this.subManager.getStage().show();
+	}
+	
+	private void stockerWindow() {
+        this.subManager.setScene(new StockerState(this.subManager, shop).scene);
         this.subManager.getStage().show();
 	}
 	
