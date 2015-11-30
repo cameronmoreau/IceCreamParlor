@@ -41,7 +41,8 @@ public class ShopOverviewState extends AppState {
 		
 		basePane.setTop(setupPane());
 		
-		scene = new Scene(basePane);
+		scene = new Scene(basePane, 600, 600);
+                
 	}
 	
 	private VBox setupPane() {
@@ -53,17 +54,26 @@ public class ShopOverviewState extends AppState {
 		for(Customer c : customer) pieHappiness.add(new PieChart.Data(c.getName(),c.getHappiness()));
         final PieChart pchartHappiness = new PieChart(pieHappiness);
         pchartHappiness.setTitle("Customer Happiness");
-        
+        //pchartHappiness.setPrefWidth(250);
+        //pchartHappiness.setPrefHeight(250);
+        pchartHappiness.setPrefSize(250,250);
         ObservableList<PieChart.Data> pieMoney = FXCollections.observableArrayList();
 		for(Worker w : worker) pieMoney.add(new PieChart.Data(w.getName(),w.getMoneyTaken()));
         final PieChart pchartMoney = new PieChart(pieMoney);
-        pchartMoney.setTitle("Worker Money");
+        pchartMoney.setTitle("Worker Money"); 
+        //pchartMoney.setPrefWidth(250);
+        //pchartMoney.setPrefHeight(250);
+        
+        pchartMoney.setPrefSize(250,250);
         
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         final BarChart<String,Number> bchartHappiness = new BarChart<String,Number>(xAxis,yAxis);
         bchartHappiness.setTitle("");
         bchartHappiness.setLegendVisible(false);
+        //bchartHappiness.setPrefWidth(250);
+        //bchartHappiness.setPrefHeight(250);
+        bchartHappiness.setPrefSize(250,300);
         xAxis.setLabel("Customer");       
         yAxis.setLabel("Happiness");
  
@@ -76,6 +86,9 @@ public class ShopOverviewState extends AppState {
         final BarChart<String,Number> bchartMoney = new BarChart<String,Number>(xAxis2,yAxis2);
         bchartMoney.setTitle("");
         bchartMoney.setLegendVisible(false);
+        //bchartMoney.setPrefWidth(250);
+        //bchartMoney.setPrefHeight(250);
+        bchartMoney.setPrefSize(250,300);
         xAxis2.setLabel("Worker");       
         yAxis2.setLabel("Money");
  
