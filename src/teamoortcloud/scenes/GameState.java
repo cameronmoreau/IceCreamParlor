@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -24,6 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import teamoortcloud.engine.App;
 import teamoortcloud.engine.DataLoader;
+import teamoortcloud.engine.ShopLog;
 import teamoortcloud.engine.ShopSimulation;
 import teamoortcloud.icecream.IceCream;
 import teamoortcloud.other.Shop;
@@ -35,19 +37,22 @@ public class GameState extends AppState {
 	Shop shop;
     
 	ShopSimulation game;
+    ShopLog log;
 	
 	StateManager subManager;
 	
 	public GameState(StateManager sm) {
 		super(sm);
+        log = new ShopLog();
 		shop = new Shop();
 		game = new ShopSimulation();
 
         
 		//Setup basic panes + contents
-		VBox rootPane = new VBox();
+		BorderPane rootPane = new BorderPane();
 		rootPane.setStyle("-fx-background-color: #474F53;");
-		rootPane.getChildren().addAll(initMenu(), initGame(), initToolBar());
+        rootPane.setTop(new VBox(initToolBar(), initStatusBar()));
+        rootPane.setBottom(initGame());
 		
 		startGame();
 		
@@ -55,69 +60,57 @@ public class GameState extends AppState {
 		setupStyle();
         setupSubWindow();
 	}
-	
-	private MenuBar initMenu()
-	{
-		MenuBar menu = new MenuBar();
-		Menu workers = new Menu("Workers");
-		Menu shop = new Menu("Shop");
-		MenuItem cashier = new MenuItem("Cashier");
-		cashier.setOnAction(e -> checkoutWindow());
-		MenuItem stocker = new MenuItem("Stocker");
-		stocker.setOnAction(e -> stockerWindow());
-		MenuItem employees = new MenuItem("Employees");
-		employees.setOnAction(e -> employeesWindow());
-		MenuItem settings = new MenuItem("Shop Settings");
-		MenuItem overview = new MenuItem("Shop Overview");
-		workers.getItems().addAll(cashier,stocker,employees);
-		shop.getItems().addAll(settings,overview);
-		menu.getMenus().addAll(workers,shop);
-		return menu;
-	}
-	
+
+    private HBox initStatusBar() {
+        HBox pane = new HBox();
+
+        pane.getChildren().addAll(log);
+        return pane;
+    }
+
 	private BorderPane initToolBar() {
 		BorderPane pane = new BorderPane();
 		HBox leftPane = new HBox();
 		HBox rightPane = new HBox();
-		
+
 		final int PANE_SPACING = 15;
 		final int PANE_PADDING = 10;
-		
+
 		leftPane.setSpacing(PANE_SPACING);
 		leftPane.setPadding(new Insets(PANE_PADDING));
 		pane.setStyle("-fx-background-color: #3C4346;");
-		
+
 		rightPane.setSpacing(PANE_SPACING);
 		rightPane.setPadding(new Insets(PANE_PADDING));
-		
+
 		//Left ToolBar
 		Button btnCashier, btnStocker, btnManager, btnShop;
 		btnCashier = new Button("Cashier");
 		btnStocker = new Button("Stocker");
 		btnManager = new Button("Employees");
 		btnShop = new Button("Shop Settings");
-		
+
 		btnCashier.getStyleClass().add("menu-button");
 		btnStocker.getStyleClass().add("menu-button");
 		btnManager.getStyleClass().add("menu-button");
 		btnShop.getStyleClass().add("menu-button");
-		
+
 		btnManager.setOnAction(e -> employeesWindow());
 		btnStocker.setOnAction(e -> stockerWindow());
 		btnCashier.setOnAction(e -> checkoutWindow());
-		
+
 		leftPane.getChildren().addAll(btnCashier, btnStocker, btnManager, btnShop);
-		
+
 		//right ToolBar
 		Button btnStats = new Button("Shop Overview");
 		btnStats.getStyleClass().add("menu-button");
 		btnShop.getStyleClass().add("menu-button");
 		rightPane.getChildren().addAll(btnStats);
-		
-		
+
+
 		pane.setLeft(leftPane);
 		pane.setRight(rightPane);
-		
+
 		return pane;
 	}
 	
@@ -125,7 +118,10 @@ public class GameState extends AppState {
 		Group pane = new Group();
 		
 		//FIX TO ACTUAL SIZE
-		Canvas canvas = new Canvas(App.SCREEN_WIDTH, App.SCREEN_HEIGHT - 80);
+		Canvas canvas = new Canvas(
+                ShopSimulation.TILE_WIDTH * ShopSimulation.TILE_SIZE,
+                ShopSimulation.TILE_HEIGHT * ShopSimulation.TILE_SIZE
+        );
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
 		Point mouseLoc = new Point(0, 0);
@@ -212,6 +208,9 @@ public class GameState extends AppState {
 	
 	private void startGame() {
 		//Queue customers
+        for(Customer c : shop.getCustomers()) {
+            //log.addLog(c.);
+        }
 		new Thread(new Runnable() {
 
 			@Override
@@ -225,10 +224,10 @@ public class GameState extends AppState {
 						e.printStackTrace();
 					}
 				}
-				
+
 				return;
 			}
-			
+
 		}).start();
 	}
 
